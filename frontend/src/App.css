@@ -24,9 +24,6 @@
 
 .contact-section {
     flex: 0.3;
-    border-radius: 25px;
-    background-color: #FFFFFF;
-    padding: 10px;
 }
 
 .chat-section {
@@ -49,4 +46,68 @@
     flex-direction: column;
     align-items: center;
     gap: 10px;
+}
+
+/* ...... End of sideBar ...... */
+
+/* Contact section */
+.contact-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.search-bar {
+    display: flex;
+    border-radius: 25px;
+    background-color: #FFFFFF;
+    padding: 10px;
+    align-items: center;
+}
+
+.search-input-box {
+    width: 100%;
+    padding: 5px 10px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+}
+
+.contact-list {
+    flex: auto;
+    border-radius: 25px;
+    background-color: #FFFFFF;
+    /* padding: 10px; */
+}
+.contact-list .wrapper {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 10px;
+}
+.contact-list .wrapper:hover {
+    background-color: #d6d0d0a9;
+    border-radius: 20px;
+}
+.contact-list-information {
+    display: flex;
+    gap: 5px;
+}
+
+.contact-information span, .contact-timestamp-read p {
+    font-size: 13px;
+    color: black;
+    opacity: 80%;
+}
+
+.contact-timestamp-read {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+hr {
+    width: 90%;
+    border: 1px solid #d6d0d0;
+    margin: 0 auto;
 }
