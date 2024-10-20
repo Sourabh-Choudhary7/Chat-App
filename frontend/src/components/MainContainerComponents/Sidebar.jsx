@@ -1,7 +1,8 @@
 import React from 'react'
-import profileImage from '../../assets/girl.png'
+import profileImage from '../../assets/dummyProfile.png'
 import HomeIcon from '@mui/icons-material/Home';
 import ChatIcon from '@mui/icons-material/Chat';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -19,6 +20,9 @@ const Sidebar = () => {
         </IconButton>
         <IconButton>
           <ChatIcon style={{ color: 'white', height: '30px', width: '30px' }} />
+        </IconButton>
+        <IconButton>
+          <GroupAddIcon style={{ color: 'white', height: '30px', width: '30px' }} />
         </IconButton>
         <IconButton>
           <NotificationsNoneIcon style={{ color: 'white', height: '30px', width: '30px' }} />

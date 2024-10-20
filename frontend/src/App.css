@@ -47,6 +47,10 @@
     align-items: center;
     gap: 10px;
 }
+.sb-upper .profile-img img {
+    border-radius: 50%;
+    border: 2px solid white;
+}
 
 /* ...... End of sideBar ...... */
 
