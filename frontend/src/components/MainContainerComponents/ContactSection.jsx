@@ -47,6 +47,7 @@ const ContactSection = () => {
           </div>
           <hr />
         </div>
+        
       </div>
     </div>
   )
