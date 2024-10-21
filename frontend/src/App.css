@@ -30,7 +30,9 @@
     flex: 0.65;
     border-radius: 25px;
     background-color: #FFFFFF;
-    padding: 10px;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
 }
 
 /* sidebar section */
@@ -110,8 +112,120 @@
     align-items: end;
 }
 
-hr {
+.contact-section hr {
     width: 90%;
     border: 1px solid #d6d0d0;
     margin: 0 auto;
 }
+
+/* Contact list section end here */
+
+/* Chat message box section */
+.chat-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 10px;
+    margin-bottom: 7px;
+    flex: 0.1;
+}
+
+.chat-nav-left {
+    display: flex;
+    gap: 10px;
+}
+
+.reciever-information span {
+    font-size: 13px;
+    color: black;
+    opacity: 80%;
+}
+
+.chat-section hr {
+    width: 96%;
+    border: 0.5px solid #d6d0d0;
+    opacity: 40%;
+    margin: 0 auto;
+}
+
+.chats-messages-container {
+    flex: 0.8;
+    background-color: #FFFFFF;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 20px;
+}
+
+.message-other-container{
+    align-self: flex-start;
+    max-width: 60%;
+    word-wrap: break-word;
+    
+}
+
+.message-self-container {
+    align-self: flex-end;
+    color: #FFFFFF;
+    max-width: 60%;
+    word-wrap: break-word;
+    
+}
+
+.messageBox-other {
+    background-color: #E7E7E7;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0px 15px 15px 15px;
+}
+
+.messageBox-self {
+    background-color: #6E00FF;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px 0px 15px 15px;
+}
+
+
+.self, .other {
+    margin: 0;
+    word-wrap: break-word;
+}
+
+.message-self-container span, .message-other-container span {
+    font-size: 12px;
+    margin-top: 5px;
+    color: gray;
+}
+
+.chats-input-box {
+    flex:0.1;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    margin-top: 5px;
+}
+.input-box {
+    display: flex;
+    background-color: #FFFFFF;
+    /* padding: 10px; */
+    align-items: center;
+    width: 100%;
+    border-radius: 25px;
+}
+
+.message-input-box {
+    width: 100%;
+    padding: 5px 10px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+}
+
+.send-button {
+    margin: 0px 10px;
+}
+
