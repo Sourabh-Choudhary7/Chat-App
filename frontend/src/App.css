@@ -49,6 +49,7 @@
     align-items: center;
     gap: 10px;
 }
+
 .sb-upper .profile-img img {
     border-radius: 50%;
     border: 2px solid white;
@@ -85,22 +86,26 @@
     background-color: #FFFFFF;
     overflow-y: auto;
 }
+
 .contact-list .wrapper {
     display: flex;
     justify-content: space-between;
     cursor: pointer;
     padding: 10px;
 }
+
 .contact-list .wrapper:hover {
     background-color: #d6d0d0a9;
     border-radius: 20px;
 }
+
 .contact-list-information {
     display: flex;
     gap: 5px;
 }
 
-.contact-information span, .contact-timestamp-read p {
+.contact-information span,
+.contact-timestamp-read p {
     font-size: 13px;
     color: black;
     opacity: 80%;
@@ -157,11 +162,11 @@
     padding: 10px 20px;
 }
 
-.message-other-container{
+.message-other-container {
     align-self: flex-start;
     max-width: 60%;
     word-wrap: break-word;
-    
+
 }
 
 .message-self-container {
@@ -169,7 +174,7 @@
     color: #FFFFFF;
     max-width: 60%;
     word-wrap: break-word;
-    
+
 }
 
 .messageBox-other {
@@ -189,25 +194,28 @@
 }
 
 
-.self, .other {
+.self,
+.other {
     margin: 0;
     word-wrap: break-word;
 }
 
-.message-self-container span, .message-other-container span {
+.message-self-container span,
+.message-other-container span {
     font-size: 12px;
     margin-top: 5px;
     color: gray;
 }
 
 .chats-input-box {
-    flex:0.1;
+    flex: 0.1;
     display: flex;
     gap: 10px;
     align-items: center;
     width: 100%;
     margin-top: 5px;
 }
+
 .input-box {
     display: flex;
     background-color: #FFFFFF;
@@ -228,4 +236,3 @@
 .send-button {
     margin: 0px 10px;
 }
-
