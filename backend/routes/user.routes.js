@@ -8,7 +8,7 @@ const router = Router();
 router.post('/register', upload.single("avatar"), register);
 router.post('/login', login);
 router.get('/me', isLoggedIn, viewProfile);
-router.put('/update-profile', isLoggedIn, updateProfile);
-router.get('/logout', isLoggedIn, logout);
+router.put('/update-profile', isLoggedIn,  upload.single("avatar"), updateProfile);
+router.get('/logout', logout);
 
 export default router;

@@ -134,7 +134,18 @@ const login = async (req, res, next) => {
 
 const viewProfile = async (req, res, next) => {
     try {
+        const userId = req.user.id;
+        const user = await User.findById(userId);
 
+        if (!user) {
+            return next(new AppError('User not found', 404));
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'User profile fetched successfully',
+            user,
+        });
     } catch (error) {
         return next(new AppError(error.message, 500));
     }
@@ -142,7 +153,55 @@ const viewProfile = async (req, res, next) => {
 
 const updateProfile = async (req, res, next) => {
     try {
+        const { userName } = req.body;
+        const { id } = req.user;
 
+        const user = await User.findById(id)
+
+        if (!user) {
+            return next(new AppError('User not found', 404));
+        }
+
+        if (userName) {
+            user.userName = userName;
+        }
+
+        // Run only if user update his avatar
+        if (req.file) {
+            // Deletes the old image uploaded by the user
+            await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+
+            try {
+                const result = await cloudinary.v2.uploader.upload(req.file.path, {
+                    folder: 'lms', // Save files in a folder named lms
+                    width: 250,
+                    height: 250,
+                    gravity: 'faces', // This option tells cloudinary to center the image around detected faces (if any) after cropping or resizing the original image
+                    crop: 'fill',
+                });
+
+                // If success
+                if (result) {
+                    // Set the public_id and secure_url in DB
+                    user.avatar.public_id = result.public_id;
+                    user.avatar.secure_url = result.secure_url;
+
+                    // After successful upload remove the file from local storage
+                    fs.rm(`uploads/${req.file.filename}`);
+                }
+            } catch (error) {
+                return next(
+                    new AppError(error || 'File not uploaded, please try again', 400)
+                );
+            }
+        }
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'User profile updated successfully',
+        });
     } catch (error) {
         return next(new AppError(error.message, 500));
     }
@@ -150,7 +209,16 @@ const updateProfile = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
     try {
+        res.cookie('token'), null, {
+            secure: true,
+            maxAge: 0,
+            httpOnly: true,
+        }
 
+        res.status(200).json({
+            success: true,
+            message: 'User logged out successfully',
+        });
     } catch (error) {
         return next(new AppError(error.message, 500));
     }
