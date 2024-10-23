@@ -3,7 +3,8 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { config } from 'dotenv';
-import errorMiddleware from './middlewares/error.middlewares.js';
+import errorMiddleware from './middlewares/error.middleware.js';
+import userRoutes from './routes/user.routes.js';
 
 config();
 const app = express();
@@ -24,9 +25,8 @@ app.use('/ping', function (req, res) {
 
 app.use(morgan('dev'));
 
-//here you can define your parents routes
-// example routes
-// app.use('/api/v1/users',userRoutes);
+// routes
+app.use('/api/v2/users',userRoutes);
 
 app.all('*', (req, res) => {
     res.status(404).send('Page not found');

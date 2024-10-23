@@ -23,6 +23,15 @@ const userSchema = new Schema(
                 'Please fill in a valid email address',
             ], // Matches email against regex
         },
+        phone: {
+            type: String,
+            required: [true, 'Phone number is required'],
+            unique: true,
+            match: [
+                /^[0-9]{10}$/, // Matches exactly 10 digits
+                'Please enter a valid 10-digit phone number',
+              ], // Matches phone number against regex
+        },
         password: {
             type: String,
             required: [true, 'Password is required'],
@@ -41,6 +50,12 @@ const userSchema = new Schema(
             type: Boolean,
             default: false,
         },
+        chats: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Chat'
+            }
+        ],
         otp: String,
         otpExpiry: Date,
         forgotPasswordToken: String,
