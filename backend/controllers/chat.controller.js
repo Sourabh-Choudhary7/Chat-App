@@ -1,7 +1,8 @@
-import Chat from '../models/chat.model.js';
 import Cloudinary from 'cloudinary';
 import AppError from '../utils/error.utils.js';
 import User from '../models/user.model.js';
+import Chat from '../models/chat.model.js';
+import Message from '../models/message.model.js';
 
 const getOrCreateChat = async (req, res, next) => {
     try {
@@ -52,6 +53,69 @@ const getOrCreateChat = async (req, res, next) => {
 
 const createGroupChat = async (req, res, next) => {
     try {
+        const { groupName, members } = req.body;
+        const { id } = req.user;
+        // 1. Ensure members list contains more than 2 users for a group
+        if (members.length < 2) {
+            return next(new AppError('A group must have at least 2 members', 400));
+        }
+
+        // 2. Add the logged-in user as the group admin and a member of the group
+        const groupMembers = [...members, id];
+
+        // 3. Create a new group chat
+        const groupChat = await Chat.create({
+            chatName: groupName || 'New Group Chat',
+            isGroupChat: true,
+            members: groupMembers,
+            groupAdmin: id
+        });
+
+        // 4. Populate the created group chat with member details
+        const populatedGroupChat = await Chat.findById(groupChat._id)
+            .populate('members', 'UserName avatar phone email')
+            .populate('groupAdmin', 'UserName avatar phone email')
+            .populate('lastMessage');
+
+        // 5. Return the created group chat
+        return res.status(201).json({
+            success: true,
+            message: 'Group chat has been created successfully',
+            populatedGroupChat
+        });
+     } catch (error) {
+        return next(new AppError(error.message, 500));
+    }
+}
+
+const getGroupChat = async (req, res, next) => {
+    try {
+        const { groupId } = req.params;
+        if (!groupId) {
+            return next(new AppError('Group ID is required', 400));
+        }
+        const groupChat = await Chat.findById(groupId)
+        .populate('members', 'userName avatar phone email')
+        .populate({
+            path: 'messages',
+            model: 'Message',
+            populate: {
+                path: 'sender',
+                model: 'User',
+                select: 'userName avatar phone email'
+            }
+        })
+        .populate('groupAdmin', 'userName avatar phone email')
+        .populate('lastMessage');
+
+        if (!groupChat) {
+            return next(new AppError('Group chat not found', 404));
+        }
+
+        return res.status(200).json({
+            success: true,
+            groupChat
+        });
 
     } catch (error) {
         return next(new AppError(error.message, 500));
@@ -85,6 +149,7 @@ const exitGroup = async (req, res, next) => {
 export {
     getOrCreateChat,
     createGroupChat,
+    getGroupChat,
     fetchGroups,
     makeGroupAdmin,
     exitGroup,

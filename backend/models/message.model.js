@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+import { model, Schema } from "mongoose";
 
 const messageSchema = new Schema({
     sender: {
@@ -25,7 +25,10 @@ const messageSchema = new Schema({
             ref: 'User'
         }
     ]
-}, { timestamps: true });
+}, {
+    timestamps: true
+}
+);
 
 const Message = model('Message', messageSchema);
 
