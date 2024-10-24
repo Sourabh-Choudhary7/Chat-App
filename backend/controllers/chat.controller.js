@@ -10,7 +10,7 @@ const getOrCreateChat = async (req, res, next) => {
         const { id } = req.user;
 
         const user = await User.findById(id);
-        if(!(user.friends.includes(friendId))) {
+        if (!(user.friends.includes(friendId))) {
             return next(new AppError('This user is not in your friends list', 409));
         }
         // 1. Check if a one-to-one chat already exists between the two users
@@ -29,18 +29,18 @@ const getOrCreateChat = async (req, res, next) => {
             });
         }
 
-         // 3. If the chat doesn't exist, create a new one
-         const newChat = await Chat.create({
+        // 3. If the chat doesn't exist, create a new one
+        const newChat = await Chat.create({
             chatName: 'one-to-one chat',
             isGroupChat: false,
             members: [id, friendId]
-         })
+        })
 
-         const populatedChat = await Chat.findById(newChat._id)
-         .populate('members', 'userName avatar phone email')
-         .populate('lastMessage');
+        const populatedChat = await Chat.findById(newChat._id)
+            .populate('members', 'userName avatar phone email')
+            .populate('lastMessage');
 
-         return res.status(201).json({
+        return res.status(201).json({
             success: true,
             message: "Chat has been created successfully",
             populatedChat
@@ -83,7 +83,7 @@ const createGroupChat = async (req, res, next) => {
             message: 'Group chat has been created successfully',
             populatedGroupChat
         });
-     } catch (error) {
+    } catch (error) {
         return next(new AppError(error.message, 500));
     }
 }
@@ -95,18 +95,18 @@ const getGroupChat = async (req, res, next) => {
             return next(new AppError('Group ID is required', 400));
         }
         const groupChat = await Chat.findById(groupId)
-        .populate('members', 'userName avatar phone email')
-        .populate({
-            path: 'messages',
-            model: 'Message',
-            populate: {
-                path: 'sender',
-                model: 'User',
-                select: 'userName avatar phone email'
-            }
-        })
-        .populate('groupAdmin', 'userName avatar phone email')
-        .populate('lastMessage');
+            .populate('members', 'userName avatar phone email')
+            .populate({
+                path: 'messages',
+                model: 'Message',
+                populate: {
+                    path: 'sender',
+                    model: 'User',
+                    select: 'userName avatar phone email'
+                }
+            })
+            .populate('groupAdmin', 'userName avatar phone email')
+            .populate('lastMessage');
 
         if (!groupChat) {
             return next(new AppError('Group chat not found', 404));
@@ -124,7 +124,15 @@ const getGroupChat = async (req, res, next) => {
 
 const fetchGroups = async (req, res, next) => {
     try {
-
+        const allGroupsChat = await Chat.find({ isGroupChat: true });
+        if (!allGroupsChat) {
+            return next(new AppError('No group chats found', 404));
+        }
+        return res.status(200).json({
+            success: true,
+            message: 'All Group Chats fetched successfully',
+            allGroupsChat
+        });
     } catch (error) {
         return next(new AppError(error.message, 500));
     }
@@ -132,6 +140,44 @@ const fetchGroups = async (req, res, next) => {
 
 const makeGroupAdmin = async (req, res, next) => {
     try {
+        const { groupId, newAdminId } = req.body;
+        const { id } = req.user;
+        // 1. Find the group by ID
+        const groupChat = await Chat.findById(groupId);
+
+        if (!groupChat) {
+            return next(new AppError('Group chat not found', 404));
+        }
+
+        // 2. Check if the requesting user is an admin
+        if (!groupChat.groupAdmin.includes(id)) {
+            return next(new AppError('Only group admins can assign a new admin', 403));
+        }
+
+        // 3. Check if the new admin is already a member of the group
+        if (!groupChat.members.includes(newAdminId)) {
+            return next(new AppError('The user to be promoted is not a member of this group', 400));
+        }
+
+        // 4. Check if the user is already an admin
+        if (groupChat.groupAdmin.includes(newAdminId)) {
+            return next(new AppError('This user is already an admin', 400));
+        }
+
+        // 5. Add the new admin to the groupAdmin field
+        groupChat.groupAdmin.push(newAdminId);
+        await groupChat.save();
+
+        // 6. Return the updated group chat with populated members and admin info
+        const updatedGroupChat = await Chat.findById(groupId)
+            .populate('members', 'userName avatar phone email')
+            .populate('groupAdmin', 'userName avatar phone email');
+
+        return res.status(200).json({
+            success: true,
+            message: 'New admin assigned successfully',
+            groupChat: updatedGroupChat
+        });
 
     } catch (error) {
         return next(new AppError(error.message, 500));
