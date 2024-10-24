@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import { config } from 'dotenv';
 import errorMiddleware from './middlewares/error.middleware.js';
 import userRoutes from './routes/user.routes.js';
+import chatRoutes from './routes/chat.routes.js';
 
 config();
 const app = express();
@@ -27,6 +28,7 @@ app.use(morgan('dev'));
 
 // routes
 app.use('/api/v2/users',userRoutes);
+app.use('/api/v2/chats',chatRoutes);
 
 app.all('*', (req, res) => {
     res.status(404).send('Page not found');
