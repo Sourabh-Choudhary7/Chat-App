@@ -30,7 +30,7 @@ const userSchema = new Schema(
             match: [
                 /^[0-9]{10}$/, // Matches exactly 10 digits
                 'Please enter a valid 10-digit phone number',
-              ], // Matches phone number against regex
+            ], // Matches phone number against regex
         },
         password: {
             type: String,
@@ -50,6 +50,12 @@ const userSchema = new Schema(
             type: Boolean,
             default: false,
         },
+        friends: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User',  // Referencing the User model to establish relationships between users
+            }
+        ],
         chats: [
             {
                 type: Schema.Types.ObjectId,

@@ -224,10 +224,104 @@ const logout = async (req, res, next) => {
     }
 }
 
+// features
+const getAllUsers = async (req, res, next) => {
+    try {
+        const users = await User.find();
+
+        if (!users) {
+            return next(new AppError('No users found', 404));
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'All Users fetched successfully',
+            data: users,
+        });
+    } catch (error) {
+        return next(new AppError(error.message, 500));
+    }
+}
+
+const addFriend = async (req, res, next) => {
+    try {
+        const { friendId } = req.body;
+        const { id } = req.user;
+
+        const user = await User.findByIdAndUpdate(id);
+        if (!user) {
+            return next(new AppError('User not found', 404));
+        }
+
+        if (friendId === id) {
+            return next(new AppError("You can't add yourself as a friend", 409));
+        }
+
+        const friend = await User.findByIdAndUpdate(friendId);
+        if (!friend) {
+            return next(new AppError('Friend not found', 404));
+        }
+
+        if (user.friends.includes(friendId)) {
+            return next(new AppError('This user is already in your friend list', 409));
+        }
+        // Add friend to the user's friend list
+        user.friends.push(friendId);
+        await user.save();
+
+        // Optionally, you can also add the logged-in user to the friend's friend list (mutual friendship)
+        friend.friends.push(id);
+        await friend.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Friend added successfully',
+        });
+
+    } catch (error) {
+        return next(new AppError(error.message, 500));
+    }
+}
+
+const getFriendsList = async (req, res, next) => {
+    try {
+        const { id } = req.user;
+
+        // populate the friends list with user details
+        const user = await User.findById(id).populate('friends', 'userName email phone avatar');
+
+        if (!user) {
+            return next(new AppError('User not found', 404));
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Friends list fetched successfully',
+            friends: user.friends,
+        });
+    } catch (error) {
+        return next(new AppError(error.message, 500));
+    }
+}
+
+// const functionName = async (req, res, next) => {
+//     try {
+
+//     } catch (error) {
+//         return next(new AppError(error.message, 500));
+//     }
+// }
+
+
+
+
 export {
     register,
     login,
     viewProfile,
     updateProfile,
     logout,
+    getAllUsers,
+    addFriend,
+    getFriendsList,
 }
