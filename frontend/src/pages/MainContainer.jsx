@@ -5,7 +5,7 @@ import ContactSection from '../components/MainContainerComponents/ContactSection
 
 const MainContainer = () => {
     return (
-        <div className='main-container'>
+        <div className="flex h-[90vh] w-[90vw] p-5 rounded-[25px] gap-5 bg-[#EFF6FC]">
             <Sidebar />
             <ContactSection />
             <ChatSection />

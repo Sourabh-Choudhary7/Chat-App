@@ -1,17 +1,14 @@
 import React from 'react'
 
-const MessageOther = ({message}) => {
-    console.log("Reciever",message)
-  return (
-    <div className='message-other-container'>
-         <div className="messageBox-other">
-                <p className="other">
-                    {message.message}
-                </p>
+const MessageOther = ({ message }) => {
+    return (
+        <div className="self-start max-w-[60%] break-words">
+            <div className="bg-gray-300 p-2 rounded-[15px] rounded-tl-none">
+                <p>{message.message}</p>
             </div>
-                <span>{message.timestamp}</span>
-    </div>
-  )
+            <span className="block text-xs opacity-80">{message.timestamp}</span>
+        </div>
+    )
 }
 
 export default MessageOther
