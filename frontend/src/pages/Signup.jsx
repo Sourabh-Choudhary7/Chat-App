@@ -17,7 +17,7 @@ const Signup = () => {
                     className="bg-auto h-full w-full bg-center shadow-lg shadow-violet-700/20 rounded-[25px]"
                 />
             </div>
-            <div className="flex flex-[0.4] max-md:flex-1 items-center justify-center rounded-[25px] bg-gradient-to-br from-pink-500 via-purple-600 to-indigo-500 p-1">
+            <div className="flex flex-[0.4] max-md:flex-1 items-center justify-center rounded-[25px] bg-gradient-to-r from-violet-500 to-fuchsia-500 shadow-2xl shadow-violet-700/40 p-1">
                 <div className="bg-white/20 backdrop-blur-lg shadow-lg rounded-2xl p-6 w-80">
                     <div className="flex justify-center -mt-16">
                         <div className="bg-blue-900 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-md">
@@ -45,7 +45,7 @@ const Signup = () => {
 
 
                         <button className="w-full bg-blue-900 hover:bg-blue-800 text-white rounded-md py-2 font-semibold shadow-md">Sign-up</button>
-                        <div className='text-center'><Link to="/" className='hover:underline'>Already have an account? Login here</Link></div>
+                        <div className='text-center'><Link to="/login" className='hover:underline'>Already have an account? Login here</Link></div>
                     </form>
                 </div>
             </div>

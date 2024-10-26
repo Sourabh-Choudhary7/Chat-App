@@ -16,7 +16,7 @@ const Login = () => {
                     className="bg-auto h-full w-full bg-center shadow-lg shadow-violet-700/20 rounded-[25px]"
                 />
             </div>
-            <div className="flex flex-[0.4] max-md:flex-1 items-center justify-center rounded-[25px] bg-gradient-to-br from-pink-500 via-purple-600 to-indigo-500 p-1">
+            <div className="flex flex-[0.4] max-md:flex-1 items-center justify-center rounded-[25px] bg-gradient-to-r from-violet-500 to-fuchsia-500 shadow-2xl shadow-violet-700/40 p-1">
                 <div className="bg-white/20 backdrop-blur-lg shadow-lg rounded-2xl p-6 w-80">
                     <div className="flex justify-center -mt-16">
                         <div className="bg-blue-900 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-md">
@@ -27,12 +27,12 @@ const Login = () => {
                     <form className="space-y-4 mt-8">
                         <div className="flex items-center bg-blue-900/20 rounded-md p-2 text-white">
                             <MailOutlineOutlinedIcon />
-                            <input type="email" placeholder="Email ID" className="bg-transparent outline-none text-white text-sm w-full pl-2" />
+                            <input type="email" placeholder="Email ID" id='email' name='email' className="bg-transparent outline-none text-white text-sm w-full pl-2" />
                         </div>
 
                         <div className="flex items-center bg-blue-900/20 rounded-md p-2 text-white">
                             <KeyOutlinedIcon />
-                            <input type="password" placeholder="Password" className="bg-transparent outline-none text-white text-sm w-full pl-2" />
+                            <input type="password" placeholder="Password" id='password' name='password' className="bg-transparent outline-none text-white text-sm w-full pl-2" />
                         </div>
 
                         <div className="flex items-center justify-between text-xs text-white">
