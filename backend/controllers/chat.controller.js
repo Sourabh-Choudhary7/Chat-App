@@ -122,11 +122,13 @@ const getGroupChat = async (req, res, next) => {
     }
 }
 
-const fetchGroups = async (req, res, next) => {
+const fetchGroupsForLoggedInUser = async (req, res, next) => {
     try {
-        const allGroupsChat = await Chat.find({ isGroupChat: true });
+        const { id } = req.user;
+        // 1. Fetch all group chats for the logged-in user
+        const allGroupsChat = await Chat.find({ members: id, isGroupChat: true,  });
         if (!allGroupsChat) {
-            return next(new AppError('No group chats found', 404));
+            return next(new AppError('No group chats found for this user', 404));
         }
         return res.status(200).json({
             success: true,
@@ -196,7 +198,7 @@ export {
     getOrCreateChat,
     createGroupChat,
     getGroupChat,
-    fetchGroups,
+    fetchGroupsForLoggedInUser,
     makeGroupAdmin,
     exitGroup,
 }
