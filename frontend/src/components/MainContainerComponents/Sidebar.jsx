@@ -7,16 +7,18 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 import SettingsIcon from '@mui/icons-material/Settings'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { IconButton } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col flex-[0.05] justify-between items-center bg-[#6E00FF] p-2 rounded-[25px] h-full">
       <div className="flex flex-col items-center gap-2">
         <div className="rounded-full border-2 border-white">
           <img src={profileImage} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
         </div>
-        <IconButton>
-          <HomeIcon style={{ color: 'white', height: '30px', width: '30px' }} />
+        <IconButton onClick={() => navigate('welcome')}>
+          <HomeIcon style={{ color: 'white', height: '30px', width: '30px' }}/>
         </IconButton>
         <IconButton>
           <ChatIcon style={{ color: 'white', height: '30px', width: '30px' }} />
