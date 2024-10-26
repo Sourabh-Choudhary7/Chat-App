@@ -9,7 +9,8 @@ const ContactSection = () => {
         <SearchIcon />
         <input type="text" placeholder="Search" className="w-full p-1 text-base outline-none" />
       </div>
-      <div className="flex-auto overflow-y-auto rounded-[25px] bg-white">
+      <div className="flex-auto overflow-y-auto rounded-[25px] bg-white text-black">
+      {/* <div className="flex-auto overflow-y-auto rounded-[25px] bg-[#31206e6e] text-white"> */}
         <h2 className="m-2 font-medium text-xl">Friends</h2>
         <div>
           <div className="flex justify-between p-2 cursor-pointer hover:bg-gray-300 hover:rounded-[20px]">

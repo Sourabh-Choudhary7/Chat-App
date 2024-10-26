@@ -25,6 +25,7 @@ const ChatSection = () => {
 
   return (
     <div className="flex flex-col flex-[0.65] rounded-[25px] bg-white p-1">
+    {/*  <div className="flex flex-col flex-[0.65] rounded-[25px] bg-[#261953d2] p-1"> */}
       {/* chat navbar */}
       <div className="flex justify-between items-center p-2 flex-[0.1]">
         <div className="flex gap-2">
@@ -49,6 +50,7 @@ const ChatSection = () => {
       <hr className="mx-auto w-[96%] border-t border-gray-300 opacity-40" />
       {/* chat messages */}
       <div className="flex flex-col gap-2 p-5 flex-[0.8] overflow-y-auto bg-white">
+      {/* <div className="flex flex-col gap-2 p-5 flex-[0.8] overflow-y-auto bg-[#21154d6e]"> */}
         <MessageOther message={reciever} />
         <MessageSelf message={sender} />
         <MessageOther message={reciever} />
