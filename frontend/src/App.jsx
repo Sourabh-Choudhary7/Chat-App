@@ -1,10 +1,13 @@
 import React from 'react'
 import MainContainer from './pages/MainContainer'
-// import './app.css'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
 const App = () => {
   return (
     <div className="flex items-center justify-center h-screen">
-      <MainContainer />
+      <Login />
+      {/* <Signup /> */}
+      {/* <MainContainer /> */}
     </div>
   )
 }
