@@ -9,9 +9,11 @@ import ErrorNotFound from './pages/ErrorNotFound';
 import Home from './components/Home';
 import AddFriend from './components/AddFriend';
 import CreateGroup from './components/CreateGroup';
+import { useSelector } from 'react-redux';
 
 const App = () => {
-  const isLoggedIn = true; // Set this based on your actual authentication logic
+  const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn)
+  console.log(isLoggedIn)
   
   return (
     <div className="flex items-center justify-center h-screen">

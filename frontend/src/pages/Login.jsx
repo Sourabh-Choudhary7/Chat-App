@@ -1,11 +1,53 @@
-import React from 'react'
+import React, { useState } from 'react'
 import welcomeImg from '../assets/loginWelcome.jpg'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
 import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { login } from '../redux/Slices/AuthSlice';
 
 const Login = () => {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+
+    }
+
+    const [loginData, setLoginData] = useState({
+        email: '',
+        password: '',
+    })
+    const dispatch = useDispatch();
+    const navigate = useNavigate()
+
+    const handleUserInput = (e) => {
+        const { name, value } = e.target;
+        setLoginData({
+            ...loginData,
+            [name]: value
+        });
+    }
+
+    const handleLogin = async (e) => {
+        console.log(loginData)
+        e.preventDefault();
+        if(!loginData.email || !loginData.password) {
+            toast.error("Please fill all the fields");
+            return;
+        }
+        const res = await dispatch(login(loginData))
+        if(res?.payload?.success)
+            navigate('/app/welcome')
+
+        setLoginData({
+            email: '',
+            password: '',
+        });
+    }
     return (
         <div className="flex h-[90vh] w-[90vw] p-5 rounded-[25px] gap-5 bg-[#EFF6FC]">
             {/* <div className="flex h-[90vh] w-[90vw] p-5 rounded-[25px] gap-5 bg-gray-700"> */}
@@ -24,15 +66,42 @@ const Login = () => {
                         </div>
                     </div>
 
-                    <form className="space-y-4 mt-8">
+                    <form action='' onSubmit={handleLogin} className="space-y-4 mt-8">
                         <div className="flex items-center bg-blue-900/20 rounded-md p-2 text-white">
                             <MailOutlineOutlinedIcon />
-                            <input type="email" placeholder="Email ID" id='email' name='email' className="bg-transparent outline-none text-white text-sm w-full pl-2" />
+                            <input type="email"
+                            placeholder="Email ID"
+                            id='email'
+                            name='email' className="bg-transparent outline-none text-white text-sm w-full pl-2" 
+                            onChange={handleUserInput}
+                            value={loginData.email}
+                            required
+                            />
                         </div>
 
                         <div className="flex items-center bg-blue-900/20 rounded-md p-2 text-white">
                             <KeyOutlinedIcon />
-                            <input type="password" placeholder="Password" id='password' name='password' className="bg-transparent outline-none text-white text-sm w-full pl-2" />
+                            <input
+                                type={isPasswordVisible ? "text" : "password"}
+                                placeholder="Password"
+                                id='password'
+                                name='password'
+                                className="bg-transparent outline-none text-white text-sm w-full pl-2"
+                                onChange={handleUserInput}
+                                value={loginData.password}
+                                required
+                            />
+                            <span className="icon cursor-pointer" onClick={togglePasswordVisibility}>
+                                {
+                                    isPasswordVisible ? (
+                                        <RemoveRedEyeOutlinedIcon />
+                                    )
+                                        :
+                                        (
+                                            <VisibilityOffOutlinedIcon />
+                                        )
+                                }
+                            </span>
                         </div>
 
                         <div className="flex items-center justify-between text-xs text-white">
