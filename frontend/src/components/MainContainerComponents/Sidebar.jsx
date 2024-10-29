@@ -1,5 +1,4 @@
 import React from 'react'
-import profileImage from '../../assets/dummyProfile.png'
 import HomeIcon from '@mui/icons-material/Home'
 import ChatIcon from '@mui/icons-material/Chat'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
@@ -14,8 +13,7 @@ import { logout } from '../../redux/Slices/AuthSlice'
 const Sidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const userData = useSelector((state) => state.auth.data)
-  console.log(userData);
+  const userData = useSelector((state) => state.auth.userData)
 
   const handleLogout = async () => {
     const res = await dispatch(logout());

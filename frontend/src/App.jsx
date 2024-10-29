@@ -11,6 +11,7 @@ import AddFriend from './components/AddFriend';
 import CreateGroup from './components/CreateGroup';
 import { useSelector } from 'react-redux';
 import Profile from './components/Profile';
+import RecieverDetails from './components/RecieverDetails';
 
 const App = () => {
   const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn)
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="welcome" element={<Welcome />} />
           <Route path="profile" element={<Profile />} />
           <Route path="chat/:id" element={<ChatSection />} />
+          <Route path="chat/:id/reciever-details" element={<RecieverDetails />} />
           <Route path="add-Friend" element={<AddFriend />} />
           <Route path="create-group" element={<CreateGroup />} />
 

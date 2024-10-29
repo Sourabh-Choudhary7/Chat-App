@@ -10,8 +10,10 @@ import SendOutlinedIcon from '@mui/icons-material/SendOutlined'
 import { IconButton } from '@mui/material'
 import MessageOther from '../MessagesComponent/MessageOther'
 import MessageSelf from '../MessagesComponent/MessageSelf'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const ChatSection = () => {
+  const navigate = useNavigate();
   let reciever = {
     name: 'Bill Gates',
     message: 'I am Bill Gates. I am doing good and same to you man keep it up...',
@@ -22,16 +24,22 @@ const ChatSection = () => {
     message: 'Hello Bill, How are you? and what are you doing all fine happy new Year',
     timestamp: '3:00 am',
   }
-
+  const { state } = useLocation();
+  const friendData = state?.friendData || [];
   return (
     <div className="flex flex-col flex-[0.65] rounded-[25px] bg-white p-2">
-    {/*  <div className="flex flex-col flex-[0.65] rounded-[25px] bg-[#261953d2] p-1"> */}
+      {/*  <div className="flex flex-col flex-[0.65] rounded-[25px] bg-[#261953d2] p-1"> */}
       {/* chat navbar */}
       <div className="flex justify-between items-center p-2 flex-[0.1]">
-        <div className="flex gap-2">
-          <img src={contactListImage} alt="Reciever" className="w-10 h-10 rounded-full" />
+        <div className="flex gap-2" onClick={() => navigate(`reciever-details`, { state: { friendData } })}>
+          <img src={friendData?.avatar?.secure_url} alt="Reciever_photo" className="w-10 h-10 rounded-full" />
           <div>
-            <h3 className='font-medium'>Bill Gates</h3>
+            <h3 className='font-medium'>
+              {
+                friendData?.userName?.split(' ')[0]
+                  .charAt(0).toUpperCase() + friendData?.userName?.split(' ')[0].slice(1).toLowerCase()
+              }
+            </h3>
             <span className="text-xs opacity-80">Last seen at 3:00 am</span>
           </div>
         </div>
@@ -50,7 +58,7 @@ const ChatSection = () => {
       <hr className="mx-auto w-[96%] border-t border-gray-300 opacity-40" />
       {/* chat messages */}
       <div className="flex flex-col gap-2 p-5 flex-[0.8] overflow-y-auto bg-white">
-      {/* <div className="flex flex-col gap-2 p-5 flex-[0.8] overflow-y-auto bg-[#21154d6e]"> */}
+        {/* <div className="flex flex-col gap-2 p-5 flex-[0.8] overflow-y-auto bg-[#21154d6e]"> */}
         <MessageOther message={reciever} />
         <MessageSelf message={sender} />
         <MessageOther message={reciever} />

@@ -8,7 +8,7 @@ import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
-import { login } from '../redux/Slices/AuthSlice';
+import { getFriendsList, login } from '../redux/Slices/AuthSlice';
 
 const Login = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -33,7 +33,6 @@ const Login = () => {
     }
 
     const handleLogin = async (e) => {
-        console.log(loginData)
         e.preventDefault();
         if(!loginData.email || !loginData.password) {
             toast.error("Please fill all the fields");
@@ -41,6 +40,7 @@ const Login = () => {
         }
         const res = await dispatch(login(loginData))
         if(res?.payload?.success)
+            await dispatch(getFriendsList());
             navigate('/app/welcome')
 
         setLoginData({

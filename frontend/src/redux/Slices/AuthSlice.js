@@ -4,7 +4,8 @@ import toast from 'react-hot-toast';
 
 const initialState = {
     isLoggedIn: localStorage.getItem('isLoggedIn') || false,
-    data: localStorage.getItem('data') ? JSON.parse(localStorage.getItem('data')) : null
+    userData: localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : null,
+    friendsListData: localStorage.getItem('friendsList') ? JSON.parse(localStorage.getItem('friendsList')) : null,
 }
 
 export const login = createAsyncThunk("/auth/login", async (data) => {
@@ -46,7 +47,6 @@ export const register = createAsyncThunk("/auth/register", async (data) => {
 export const logout = createAsyncThunk("/auth/logout", async () => {
     try {
         let res = axiosInstance.get("users/logout");
-        console.log("Respone logout :",res);
         toast.promise(res, {
             loading: "Loading...",
             success: (data) => {
@@ -78,6 +78,58 @@ export const getProfile = createAsyncThunk("/user/profile", async () => {
     }
 });
 
+export const getAllRegisteredUsers = createAsyncThunk("/user/all-people", async () => {
+    try {
+        let res = axiosInstance.get("users/all-users");
+        toast.promise(res, {
+            loading: "Getting all users...",
+            success: (data) => {
+                return data?.data?.message;
+            },
+            error: "Failed to get all users",
+        });
+        res = await res;
+        return res.data;
+    } catch (error) {
+        toast.error(error?.response?.data?.message);
+    }
+});
+
+export const addFriend = createAsyncThunk("/users/add-friend", async (friendId) => {
+    try {
+        let res = axiosInstance.post("users/add-friend", { friendId });
+
+        toast.promise(res, {
+            loading: "Adding friend to your friend list...",
+            success: (data) => {
+                return data?.data?.message;
+            },
+            error: "Failed to add friend",
+        });
+        res = await res;
+        return res.data;
+    } catch (error) {
+        toast.error(error?.response?.data?.message);
+    }
+});
+
+export const getFriendsList = createAsyncThunk("/user/friends", async () => {
+    try {
+        let res = axiosInstance.get("users/friends-list");
+        toast.promise(res, {
+            loading: "Getting friends list...",
+            success: (data) => {
+                return data?.data?.message;
+            },
+            error: "Failed to get friends list",
+        });
+        res = await res;
+        return res.data;
+    } catch (error) {
+        toast.error(error?.response?.data?.message);
+    }
+});
+
 const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -85,24 +137,31 @@ const authSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(login.fulfilled, (state, action) => {
-                console.log("login action: ", action);
                 if (action?.payload?.success) {
                     const { user } = action?.payload;
                     if (user) {
                         localStorage.setItem('isLoggedIn', true);
-                        localStorage.setItem('data', JSON.stringify(user));
+                        localStorage.setItem('userData', JSON.stringify(user));
                         state.isLoggedIn = true;
-                        state.data = user;
+                        state.userData = user;
                     }
                 }
             })
             .addCase(logout.fulfilled, (state, action) => {
-                console.log("logout action: ", action);
                 if (action?.payload?.success) {
                     localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('data');
+                    localStorage.removeItem('userData');
                     state.isLoggedIn = false;
-                    state.data = null;
+                    state.userData = null;
+                }
+            })
+            .addCase(getFriendsList.fulfilled, (state, action) => {
+                if (action?.payload?.success) {
+                    const { friends } = action?.payload;
+                    if (friends) {
+                        localStorage.setItem('friendsList', JSON.stringify(friends));
+                        state.friendsListData = friends;
+                    }
                 }
             })
     }

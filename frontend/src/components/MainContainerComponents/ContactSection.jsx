@@ -4,9 +4,22 @@ import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import contactListImage from '../../assets/BillGates.png'
 import { useNavigate } from 'react-router-dom'
 import { IconButton, Tooltip } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllRegisteredUsers } from '../../redux/Slices/AuthSlice';
 
 const ContactSection = () => {
+  const friendsList = useSelector((state) => state?.auth?.friendsListData)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+
+  const getAllUsers = async () => {
+    const res = await dispatch(getAllRegisteredUsers());
+    if (res?.payload?.success) {
+      navigate("add-friend", { state: { users: res?.payload?.data } })
+
+    }
+  }
   return (
     <div className="flex flex-col flex-[0.3] gap-5">
       <div className="flex items-center gap-2">
@@ -14,7 +27,7 @@ const ContactSection = () => {
           <SearchIcon />
           <input type="text" placeholder="Search" className="w-full p-1 text-base outline-none" />
         </div>
-        <IconButton onClick={() => navigate("add-Friend")}>
+        <IconButton onClick={getAllUsers}>
           <Tooltip title="Add Friend">
             <PersonAddOutlinedIcon className='text-black' />
           </Tooltip>
@@ -23,22 +36,31 @@ const ContactSection = () => {
       <div className="flex-auto overflow-y-auto rounded-[25px] bg-white text-black">
         {/* <div className="flex-auto overflow-y-auto rounded-[25px] bg-[#31206e6e] text-white"> */}
         <h2 className="m-2 font-medium text-xl">Friends</h2>
-        <div onClick={() => navigate('chat/:id')}>
-          <div className="flex justify-between p-2 cursor-pointer hover:bg-gray-300 hover:rounded-[20px]">
-            <div className="flex gap-2">
-              <img src={contactListImage} alt="Contact" className="w-10 h-10 rounded-full" />
-              <div>
-                <h3>Bill Gates</h3>
-                <span className="text-sm opacity-80">Hi How are you Gates?</span>
-              </div>
-            </div>
-            <div className="flex flex-col items-end">
-              <p className="text-sm opacity-80">Today, 3:00 am</p>
-              <p className="text-sm opacity-80">✓✓</p>
-            </div>
-          </div>
-          <hr className="mx-auto w-[90%] border-gray-300" />
-        </div>
+        {
+          friendsList?.map((friend, index) => (
+            <ul onClick={() => navigate(`chat/${friend?._id}`, {state: {friendData: friend}})} key={friend?._id || index}>
+              <li className="flex justify-between p-2 cursor-pointer hover:bg-gray-300 hover:rounded-[20px]">
+                <div className="flex gap-2">
+                  <img src={friend?.avatar?.secure_url} alt="Contact" className="w-10 h-10 rounded-full" />
+                  <div>
+                    <h3>
+                      {
+                        friend?.userName?.split(' ')[0]
+                          .charAt(0).toUpperCase() + friend?.userName?.split(' ')[0].slice(1).toLowerCase()
+                      }
+                    </h3>
+                    <span className="text-sm opacity-80">Hi How are you Gates?</span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end">
+                  <p className="text-sm opacity-80">Today, 3:00 am</p>
+                  <p className="text-sm opacity-80">✓✓</p>
+                </div>
+              </li>
+              <hr className="mx-auto w-[90%] border-gray-300" />
+            </ul>
+          ))
+        }
 
       </div>
     </div>
