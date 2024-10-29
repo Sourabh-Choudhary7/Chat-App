@@ -30,7 +30,7 @@ const CreateGroup = () => {
 
     }
     return (
-        <div className="flex flex-col flex-[0.65] rounded-[25px] bg-white p-4 ">
+        <div className="flex flex-col flex-[0.65] rounded-[25px] bg-white p-2">
             <h2 className="text-lg text-center font-semibold text-blue-500 my-4">Create New Group</h2>
 
             {/* Group Name Input */}

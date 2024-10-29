@@ -3,7 +3,7 @@ import welcomeImg from '../assets/chats.png';
 
 const Welcome = () => {
   return (
-    <div className="flex items-center justify-center gap-4 flex-[0.65] rounded-[25px] bg-gradient-to-r from-violet-500 to-fuchsia-500 p-1 shadow-2xl shadow-violet-700/40">
+    <div className="flex items-center justify-center gap-4 flex-[0.65] rounded-[25px] bg-gradient-to-r from-violet-500 to-fuchsia-500 p-2 shadow-2xl shadow-violet-700/40">
       <div className="w-1/2 px-4">
       <h2 className='text-white text-3xl font-bold mb-2 drop-shadow-lg'>Hi Sourabh,👋</h2>
         <h3 className="text-white text-xl font-medium mb-2 drop-shadow-lg">

@@ -24,7 +24,7 @@ const ChatSection = () => {
   }
 
   return (
-    <div className="flex flex-col flex-[0.65] rounded-[25px] bg-white p-1">
+    <div className="flex flex-col flex-[0.65] rounded-[25px] bg-white p-2">
     {/*  <div className="flex flex-col flex-[0.65] rounded-[25px] bg-[#261953d2] p-1"> */}
       {/* chat navbar */}
       <div className="flex justify-between items-center p-2 flex-[0.1]">

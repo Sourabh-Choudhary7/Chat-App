@@ -61,6 +61,23 @@ export const logout = createAsyncThunk("/auth/logout", async () => {
     }
 });
 
+export const getProfile = createAsyncThunk("/user/profile", async () => {
+    try {
+        let res = axiosInstance.get("users/me");
+        toast.promise(res, {
+            loading: "Getting profile...",
+            success: (data) => {
+                return data?.data?.message;
+            },
+            error: "Failed to get profile",
+        });
+        res = await res;
+        return res.data;
+    } catch (error) {
+        toast.error(error?.response?.data?.message);
+    }
+});
+
 const authSlice = createSlice({
     name: 'auth',
     initialState,

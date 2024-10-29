@@ -10,10 +10,10 @@ import Home from './components/Home';
 import AddFriend from './components/AddFriend';
 import CreateGroup from './components/CreateGroup';
 import { useSelector } from 'react-redux';
+import Profile from './components/Profile';
 
 const App = () => {
   const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn)
-  console.log(isLoggedIn)
   
   return (
     <div className="flex items-center justify-center h-screen">
@@ -26,6 +26,7 @@ const App = () => {
         <Route path="/app" element={isLoggedIn ? <MainContainer /> : <Navigate to="/" />}>
           <Route path="home" element={<Home />} />
           <Route path="welcome" element={<Welcome />} />
+          <Route path="profile" element={<Profile />} />
           <Route path="chat/:id" element={<ChatSection />} />
           <Route path="add-Friend" element={<AddFriend />} />
           <Route path="create-group" element={<CreateGroup />} />

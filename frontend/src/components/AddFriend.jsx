@@ -20,7 +20,7 @@ const AddFriend = () => {
         { id: 15, name: 'Shourya Sinha' }
     ];
     return (
-        <div className='flex flex-col flex-[0.65] rounded-[25px] bg-white p-2 '>
+        <div className='flex flex-col flex-[0.65] rounded-[25px] bg-white p-2'>
             <h2 className="text-lg text-center font-semibold text-blue-500 my-4">People</h2>
             <div className='overflow-x-auto mb-4'>
             <ul className="space-y-2 w-[80%] mx-auto my-0">
