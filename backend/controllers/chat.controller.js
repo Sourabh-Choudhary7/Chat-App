@@ -42,7 +42,7 @@ const getOrCreateChat = async (req, res, next) => {
 
         return res.status(201).json({
             success: true,
-            message: "Chat has been created successfully",
+            message: "Chats get successfully",
             populatedChat
         });
 
