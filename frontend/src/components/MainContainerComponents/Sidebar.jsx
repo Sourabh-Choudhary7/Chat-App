@@ -8,9 +8,18 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { IconButton, Tooltip } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { logout } from '../../redux/Slices/AuthSlice'
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    const res = await dispatch(logout());
+    if(res?.payload?.success)
+    navigate('/');
+  };
   return (
     <div className="flex flex-col flex-[0.05] justify-between items-center bg-[#6E00FF] p-2 rounded-[25px] h-full">
       <div className="flex flex-col items-center gap-2">
@@ -45,7 +54,7 @@ const Sidebar = () => {
           </Tooltip>
         </IconButton>
       </div>
-      <IconButton>
+      <IconButton onClick={handleLogout}>
         <Tooltip title="Logout">
           <LogoutIcon style={{ color: 'white', height: '30px', width: '30px' }} />
         </Tooltip>

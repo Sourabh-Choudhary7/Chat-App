@@ -1,12 +1,94 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import welcomeImg from '../assets/loginWelcome.jpg'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
 import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import { useDispatch } from 'react-redux';
+import { register } from '../redux/Slices/AuthSlice';
+import toast from 'react-hot-toast';
 
 const Signup = () => {
+    const [signupData, setSignupData] = useState({
+        username: '',
+        email: '',
+        password: '',
+        phone: '',
+        showPassword: false
+    });
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const togglePasswordVisibility = () => {
+        setSignupData({
+            ...signupData,
+            showPassword: !signupData.showPassword
+        });
+    }
+
+    const handleUserInput = (e) => {
+        const { name, value } = e.target;
+        setSignupData({
+            ...signupData,
+            [name]: value
+        });
+    }
+
+    const handleCreateAccount = async (e) => {
+        e.preventDefault();
+        if (!signupData.username || !signupData.email || !signupData.password || !signupData.phone) {
+            toast.error('Please fill all the fields');
+            return;
+        }
+        // checking the name field length
+        if (signupData.username.length < 5) {
+            toast.error("username should be atleast of 5 characters");
+            return;
+        }
+
+        // email validation using regex
+        if (!signupData.email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
+            toast.error("Invalid email id");
+            return;
+        }
+
+        if (!signupData.phone.match(/^[0-9]{10}$/)) {
+            toast.error(
+                "Phone number should be in 10 digits"
+            );
+            return;
+        }
+
+        // password validation using regex
+        if (!signupData.password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$/)) {
+            toast.error(
+                "Minimum password length should be 8 with Uppercase, Lowercase, Number and Symbol"
+            );
+            return;
+        }
+        const formData = new FormData();
+        formData.append("userName", signupData.username);
+        formData.append("email", signupData.email);
+        formData.append("phone", signupData.phone);
+        formData.append("password", signupData.password);
+
+        const res = await dispatch(register(formData));
+
+        if (res?.payload?.success)
+            navigate('/');
+
+        setSignupData({
+            username: "",
+            email: "",
+            phone: "",
+            password: "",
+        });
+
+    }
+
     return (
         <div className="flex h-[90vh] w-[90vw] p-5 rounded-[25px] gap-5 bg-[#EFF6FC]">
             {/* <div className="flex h-[90vh] w-[90vw] p-5 rounded-[25px] gap-5 bg-gray-700"> */}
@@ -25,22 +107,69 @@ const Signup = () => {
                         </div>
                     </div>
 
-                    <form className="space-y-4 mt-8">
+                    <form className="space-y-4 mt-8" action='' onSubmit={handleCreateAccount}>
                         <div className="flex items-center bg-blue-900/20 rounded-md p-2 text-white">
                             <PersonOutlineOutlinedIcon />
-                            <input type="text" placeholder="Username" id='username' name='username' className="bg-transparent outline-none text-white text-sm w-full pl-2" />
+                            <input
+                                type="text"
+                                placeholder="Username"
+                                id='username'
+                                name='username'
+                                className="bg-transparent outline-none text-white text-sm w-full pl-2"
+                                value={signupData.username}
+                                onChange={handleUserInput}
+                                required
+                            />
                         </div>
                         <div className="flex items-center bg-blue-900/20 rounded-md p-2 text-white">
                             <MailOutlineOutlinedIcon />
-                            <input type="email" placeholder="Email ID" id='email' name='email' className="bg-transparent outline-none text-white text-sm w-full pl-2" />
+                            <input
+                                type="email"
+                                placeholder="Email ID"
+                                id='email'
+                                name='email'
+                                className="bg-transparent outline-none text-white text-sm w-full pl-2"
+                                value={signupData.email}
+                                onChange={handleUserInput}
+                                required
+                            />
                         </div>
                         <div className="flex items-center bg-blue-900/20 rounded-md p-2 text-white">
                             <LocalPhoneOutlinedIcon />
-                            <input type="text" placeholder="Phone" id='phone' name='phone' className="bg-transparent outline-none text-white text-sm w-full pl-2" />
+                            <input
+                                type="text"
+                                placeholder="Phone"
+                                id='phone'
+                                name='phone'
+                                className="bg-transparent outline-none text-white text-sm w-full pl-2"
+                                value={signupData.phone}
+                                onChange={handleUserInput}
+                                required
+                            />
                         </div>
                         <div className="flex items-center bg-blue-900/20 rounded-md p-2 text-white">
                             <KeyOutlinedIcon />
-                            <input type="password" placeholder="Password" id='password' name='password' className="bg-transparent outline-none text-white text-sm w-full pl-2" />
+                            <input
+                                type={signupData.showPassword ? "text" : "password"}
+                                placeholder="Password"
+                                id='password'
+                                name='password'
+                                className="bg-transparent outline-none text-white text-sm w-full pl-2"
+                                value={signupData.password}
+                                onChange={handleUserInput}
+                                required
+                            />
+                            <span className="icon cursor-pointer" onClick={togglePasswordVisibility}>
+                                {
+                                    signupData.showPassword ? (
+                                        <RemoveRedEyeOutlinedIcon />
+                                    )
+                                        :
+                                        (
+                                            <VisibilityOffOutlinedIcon />
+                                        )
+                                }
+                            </span>
                         </div>
 
 
