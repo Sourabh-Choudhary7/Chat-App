@@ -1,11 +1,12 @@
 import { Router } from "express";
 import isLoggedIn  from '../middlewares/auth.middleware.js';
 import upload from '../middlewares/multer.middleware.js';
-import { createGroupChat, exitGroup, fetchGroupsForLoggedInUser, getGroupChat, getOrCreateChat, makeGroupAdmin } from "../controllers/chat.controller.js";
+import { createChat, createGroupChat, exitGroup, fetchGroupsForLoggedInUser, getAllChats, getGroupChat, makeGroupAdmin } from "../controllers/chat.controller.js";
 
 const router = Router();
 
-router.post('/one-to-one', isLoggedIn, getOrCreateChat);
+router.get('/', isLoggedIn, getAllChats);
+router.post('/create', isLoggedIn, createChat);
 router.post('/create-group', isLoggedIn, createGroupChat);
 router.get('/group/:groupId', isLoggedIn, getGroupChat);
 router.get('/get-groups', isLoggedIn, fetchGroupsForLoggedInUser);
