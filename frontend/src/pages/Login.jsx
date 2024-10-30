@@ -40,7 +40,6 @@ const Login = () => {
         }
         const res = await dispatch(login(loginData))
         if(res?.payload?.success)
-            await dispatch(getFriendsList());
             navigate('/app/welcome')
 
         setLoginData({

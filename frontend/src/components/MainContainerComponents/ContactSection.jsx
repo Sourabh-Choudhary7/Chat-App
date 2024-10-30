@@ -5,10 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import { IconButton, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllRegisteredUsers } from '../../redux/Slices/AuthSlice';
-import { getOrCreateChat } from '../../redux/Slices/ChatSlice';
+import { createChat } from '../../redux/Slices/ChatSlice';
 
 const ContactSection = () => {
   const friendsList = useSelector((state) => state?.auth?.friendsListData);
+  const chatList = useSelector((state) => state?.chat?.allChatsData);
+  console.log("chatlist", chatList)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -20,9 +22,10 @@ const ContactSection = () => {
   };
 
   const getOneToOneChat = async (friendId, friend) => {
-    const res = await dispatch(getOrCreateChat(friendId));
+    const res = await dispatch(createChat(friendId));
+    let chatData = res?.payload?.chat
     if (res?.payload?.success) {
-      navigate(`chat/${friendId}`, { state: { friendData: friend } });
+      navigate(`chat/${friendId}`, { state: { friendData: friend, chatData: chatData } });
     }
   };
 
@@ -42,26 +45,33 @@ const ContactSection = () => {
       <div className="flex-auto overflow-y-auto rounded-[25px] bg-white text-black">
         <h2 className="m-2 font-medium text-xl">Friends</h2>
         {
-          friendsList?.map((friend, index) => (
-            <ul onClick={() => getOneToOneChat(friend?._id, friend)} key={friend?._id || index}>
-              <li className="flex justify-between p-2 cursor-pointer hover:bg-gray-300 hover:rounded-[20px]">
-                <div className="flex gap-2">
-                  <img src={friend?.avatar?.secure_url} alt="Contact" className="w-10 h-10 rounded-full" />
-                  <div>
-                    <h3>
-                      {friend?.userName?.split(' ')[0].charAt(0).toUpperCase() + friend?.userName?.split(' ')[0].slice(1).toLowerCase()}
-                    </h3>
-                    <span className="text-sm opacity-80">Hi How are you Gates?</span>
+          friendsList?.map((friend, index) => {
+            const chat = chatList?.find((chat) =>
+              chat?.members?.some((member) => member?._id === friend?._id
+              ));
+            return (
+              <ul onClick={() => getOneToOneChat(friend?._id, friend)} key={friend?._id || index}>
+                <li className="flex justify-between p-2 cursor-pointer hover:bg-gray-300 hover:rounded-[20px]">
+                  <div className="flex gap-2">
+                    <img src={friend?.avatar?.secure_url} alt="Contact" className="w-10 h-10 rounded-full" />
+                    <div>
+                      <h3>
+                        {friend?.userName?.split(' ')[0].charAt(0).toUpperCase() + friend?.userName?.split(' ')[0].slice(1).toLowerCase()}
+                      </h3>
+                      <span className="text-sm opacity-80">
+                        {chat?.lastMessage?.content || "No messages yet"}
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col items-end">
-                  <p className="text-sm opacity-80">Today, 3:00 am</p>
-                  <p className="text-sm opacity-80">✓✓</p>
-                </div>
-              </li>
-              <hr className="mx-auto w-[90%] border-gray-300" />
-            </ul>
-          ))
+                  <div className="flex flex-col items-end">
+                    <p className="text-sm opacity-80">Today, 3:00 am</p>
+                    <p className="text-sm opacity-80">✓✓</p>
+                  </div>
+                </li>
+                <hr className="mx-auto w-[90%] border-gray-300" />
+              </ul>
+            );
+          })
         }
       </div>
     </div>

@@ -3,45 +3,56 @@ import axiosInstance from '../../helpers/axiosInstance';
 import toast from 'react-hot-toast';
 
 const initialState = {
-    AllChatsData: []
-}
+    allChatsData: []
+};
 
-export const getOrCreateChat = createAsyncThunk("/user/chat", async (friendId) => {
-    console.log(friendId)
+export const getAllChats = createAsyncThunk("user/chat", async () => {
     try {
-        let res = axiosInstance.post("chats/one-to-one", { friendId });
+        let res = axiosInstance.get("chats");
         toast.promise(res, {
             loading: "Loading chat...",
-            success: (data) => {
-                return data?.data?.message;
-            },
+            success: "Chats loaded",
             error: "Failed to get chat",
         });
-        res = await res;
-        return res.data;
+        res = await res
+        return res.data.chats;
     } catch (error) {
-        toast.error(error?.response?.data?.message);
+        toast.error(error?.response?.data?.message || "An error occurred");
+        console.log(error.message);
+        throw error;
     }
 });
 
+export const createChat = createAsyncThunk("user/chat/create", async (friendId) => {
+    try {
+        let res = axiosInstance.post("chats/create", { friendId });
+        toast.promise(res, {
+            loading: "Creating chat...",
+            success: (data) => data?.data?.message || "Chat created",
+            error: "Failed to create chat",
+        });
+        res = await res
+        return res.data;
+    } catch (error) {
+        toast.error(error?.response?.data?.message || "An error occurred");
+        throw error;
+    }
+});
 
 const chatSlice = createSlice({
     name: 'chat',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(getOrCreateChat.fulfilled, (state, action) => {
+        builder.addCase(getAllChats.fulfilled, (state, action) => {
+            console.log("action all chats:", action)
             if (action?.payload) {
-                if (Array.isArray(action.payload)) {
-                    state.AllChatsData = [...action.payload];
-                } else {
-                    state.AllChatsData.push(action.payload); // Add the single chat object
-                }
+                state.allChatsData = [...action?.payload] || [];
+            } else {
+                state.AllChatsData = [];
             }
         });
     }
-    
-    
-})
+});
 
 export default chatSlice.reducer;
