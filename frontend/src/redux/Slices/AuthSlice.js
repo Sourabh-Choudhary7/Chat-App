@@ -116,13 +116,13 @@ export const addFriend = createAsyncThunk("/users/add-friend", async (friendId) 
 export const getFriendsList = createAsyncThunk("/user/friends", async () => {
     try {
         let res = axiosInstance.get("users/friends-list");
-        toast.promise(res, {
-            loading: "Getting friends list...",
-            success: (data) => {
-                return data?.data?.message;
-            },
-            error: "Failed to get friends list",
-        });
+        // toast.promise(res, {
+        //     loading: "Getting friends list...",
+        //     success: (data) => {
+        //         return data?.data?.message;
+        //     },
+        //     error: "Failed to get friends list",
+        // });
         res = await res;
         return res.data;
     } catch (error) {

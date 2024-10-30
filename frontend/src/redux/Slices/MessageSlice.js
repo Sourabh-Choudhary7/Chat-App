@@ -10,21 +10,38 @@ export const getMessagesByChatId = createAsyncThunk("user/chat/messages", async 
     try {
         let res = axiosInstance.get(`messages/${chatId}`);
         res = await res;
+        return res.data.messages;
+    } catch (error) {
+        toast.error(error?.response?.data?.message);
+    }
+})
+
+export const sendMessage = createAsyncThunk("user/chat/send-message", async (data) => {
+    try {
+        let res = axiosInstance.post("messages", data);
+        res = await res;
         return res.data;
     } catch (error) {
         toast.error(error?.response?.data?.message);
     }
 })
 
+
+
 const messageSlice = createSlice({
     name: 'message',
     initialState,
-    reducers: {},
+    reducers: {
+        addMessage: (state, action) => {
+            state.messages.push(action.payload);
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(getMessagesByChatId.fulfilled, (state, action) => {
-            state.messages = action.payload;
+            state.messages = [...action.payload];
         })
-    }   
+    }
 })
 
+export const { addMessage } = messageSlice.actions;
 export default messageSlice.reducer;

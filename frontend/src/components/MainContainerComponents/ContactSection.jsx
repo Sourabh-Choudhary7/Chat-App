@@ -10,7 +10,6 @@ import { createChat } from '../../redux/Slices/ChatSlice';
 const ContactSection = () => {
   const friendsList = useSelector((state) => state?.auth?.friendsListData);
   const chatList = useSelector((state) => state?.chat?.allChatsData);
-  console.log("chatlist", chatList)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -27,6 +26,24 @@ const ContactSection = () => {
     if (res?.payload?.success) {
       navigate(`chat/${friendId}`, { state: { friendData: friend, chatData: chatData } });
     }
+  };
+
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+
+    // Options for formatting
+    const options = {
+      // year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    };
+
+    const formattedTime = date.toLocaleString('en-US', options);
+
+    return date.toLocaleString('en-US', options);
   };
 
   return (
@@ -64,7 +81,7 @@ const ContactSection = () => {
                     </div>
                   </div>
                   <div className="flex flex-col items-end">
-                    <p className="text-sm opacity-80">Today, 3:00 am</p>
+                    <p className="text-sm opacity-80">{formatTimestamp(chat?.lastMessage?.createdAt)}</p>
                     <p className="text-sm opacity-80">✓✓</p>
                   </div>
                 </li>

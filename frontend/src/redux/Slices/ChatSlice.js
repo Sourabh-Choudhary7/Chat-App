@@ -18,7 +18,6 @@ export const getAllChats = createAsyncThunk("user/chat", async () => {
         return res.data.chats;
     } catch (error) {
         toast.error(error?.response?.data?.message || "An error occurred");
-        console.log(error.message);
         throw error;
     }
 });
@@ -26,11 +25,6 @@ export const getAllChats = createAsyncThunk("user/chat", async () => {
 export const createChat = createAsyncThunk("user/chat/create", async (friendId) => {
     try {
         let res = axiosInstance.post("chats/create", { friendId });
-        toast.promise(res, {
-            loading: "Creating chat...",
-            success: (data) => data?.data?.message || "Chat created",
-            error: "Failed to create chat",
-        });
         res = await res
         return res.data;
     } catch (error) {
@@ -45,7 +39,6 @@ const chatSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(getAllChats.fulfilled, (state, action) => {
-            console.log("action all chats:", action)
             if (action?.payload) {
                 state.allChatsData = [...action?.payload] || [];
             } else {
