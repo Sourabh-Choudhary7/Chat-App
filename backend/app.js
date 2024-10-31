@@ -28,9 +28,9 @@ app.use('/ping', function (req, res) {
 app.use(morgan('dev'));
 
 // routes
-app.use('/api/v2/users',userRoutes);
-app.use('/api/v2/chats',chatRoutes);
-app.use('/api/v2/messages',messageRoutes);
+app.use('/api/v2/users', userRoutes);
+app.use('/api/v2/chats', chatRoutes);
+app.use('/api/v2/messages', messageRoutes);
 
 app.all('*', (req, res) => {
     res.status(404).send('Page not found');

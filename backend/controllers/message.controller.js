@@ -3,6 +3,7 @@ import AppError from '../utils/error.utils.js';
 import User from '../models/user.model.js';
 import Chat from '../models/chat.model.js';
 import Message from '../models/message.model.js';
+import { getReceiverSocketId, io } from '../socket/socket.js';
 
 const allMessages = async (req, res, next) => {
     try {
@@ -43,22 +44,39 @@ const sendMessage = async (req, res, next) => {
         if (!chat.members.includes(id)) {
             return next(new AppError('You are not a member of this chat', 403));
         }
-        // 2. create a new meesage content and save it to the database
+        // 2. To find reciever's id
+        const receiverId = chat.members.find(member => member.toString() !== id);
+        if (!receiverId) {
+            return next(new AppError('Receiver not found', 404));
+        }
+
+        // 3. create a new meesage content and save it to the database
         const message = new Message({
             sender: id,
+            reciever: receiverId,
             chat: chatId,
             content
         })
         await message.save();
-        // 3. set all messages in chat.messages collection
+        // 4. set all messages in chat.messages collection
         chat.messages.push(message._id);
 
-        // 4. Update the chat last message
+        // 5. Update the chat last message
         chat.lastMessage = message;
 
         await chat.save();
-        // 5. populate the message with sender details
+
+        // 6. implement socket io for real time data transfer
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        console.log("Reciver id:", receiverId)
+        console.log("sender id:", id)
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit('newMessage', message);
+        }
+        // 7. populate the message with sender details
         // message.sender = await User.findById(message.sender).select('useName phone email');
+        console.log("receiverSocketId: ", receiverSocketId)
+        console.log("Msg", message)
         return res.status(201).json({
             success: true,
             message: 'Message sent successfully',
