@@ -2,8 +2,6 @@ import { Message } from '@mui/icons-material';
 import React from 'react'
 
 const MessageOther = ({ message, formatTimestamp }) => {
-
-    console.log(message)
     return (
         <div className="self-start max-w-[60%] break-words">
             <div className="bg-gray-300 p-2 rounded-[15px] rounded-tl-none">
