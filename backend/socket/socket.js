@@ -1,7 +1,6 @@
 import { Server } from "socket.io";
 import http from "http";
 import app from '../app.js';
-import { Console } from "console";
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -15,6 +14,7 @@ const userSocketMap = {}; // Maps userId to socketId
 
 // Helper function to get a receiver's socket ID
 export const getReceiverSocketId = (receiverId) => userSocketMap[receiverId];
+console.log("getReceiverSocketId",getReceiverSocketId)
 
 io.on('connection', (socket) => {
     const userId = socket.handshake.query.userId;
@@ -35,10 +35,10 @@ io.on('connection', (socket) => {
     });
 
     socket.on("newMessage", (message) => {
-        console.log("Receiver id:", message.receiverId);
-        const receiverSocketId = getReceiverSocketId(message.receiverId);
+        console.log("Receiver id from rec123:", message.receiver);
+        const receiverSocketId = getReceiverSocketId(message.receiver._id);
         if (receiverSocketId) {
-            io.to(receiverSocketId).emit("messageReceived", message);
+            socket.to(receiverSocketId).emit("messageReceived", message);
         }
     });
 

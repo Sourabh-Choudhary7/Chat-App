@@ -44,8 +44,10 @@ const sendMessage = async (req, res, next) => {
         if (!chat.members.includes(id)) {
             return next(new AppError('You are not a member of this chat', 403));
         }
+        console.log("senderId", id)
         // 2. To find reciever's id
         const receiverId = chat.members.find(member => member.toString() !== id);
+
         if (!receiverId) {
             return next(new AppError('Receiver not found', 404));
         }
@@ -53,7 +55,7 @@ const sendMessage = async (req, res, next) => {
         // 3. create a new meesage content and save it to the database
         const message = new Message({
             sender: id,
-            reciever: receiverId,
+            receiver: receiverId,
             chat: chatId,
             content
         })
@@ -67,16 +69,16 @@ const sendMessage = async (req, res, next) => {
         await chat.save();
 
         // 6. implement socket io for real time data transfer
+        console.log("Welcome new message")
+        console.log("Message sent receiverId:", message.receiver);
+        console.log("Message send receiverId:", receiverId)
         const receiverSocketId = getReceiverSocketId(receiverId);
-        console.log("Reciver id:", receiverId)
-        console.log("sender id:", id)
+        console.log("Message send socketId:", receiverSocketId)
         if (receiverSocketId) {
             io.to(receiverSocketId).emit('newMessage', message);
         }
         // 7. populate the message with sender details
         // message.sender = await User.findById(message.sender).select('useName phone email');
-        console.log("receiverSocketId: ", receiverSocketId)
-        console.log("Msg", message)
         return res.status(201).json({
             success: true,
             message: 'Message sent successfully',
