@@ -9,10 +9,11 @@ import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import MessageOther from '../MessagesComponent/MessageOther';
 import MessageSelf from '../MessagesComponent/MessageSelf';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addMessage, getMessagesByChatId, sendMessage } from '../../redux/Slices/MessageSlice';
 import { io } from 'socket.io-client';
+
 
 const ChatSection = () => {
   const navigate = useNavigate();
@@ -24,11 +25,13 @@ const ChatSection = () => {
   const messageData = useSelector((state) => state?.message?.messages || []);
   const userData = useSelector((state) => state?.auth?.userData);
   const [socket, setSocket] = useState(null);
+  let { id } = useParams();
+
   const [messageContent, setMessageContent] = useState({
-    chatId: chatData._id,
+    chatId: id,
     content: '',
   });
-  const SOCKET_URL = 'http://localhost:5000'
+  const SOCKET_URL = 'http://localhost:5000';
 
   // Initialize socket connection
   useEffect(() => {
@@ -37,8 +40,10 @@ const ChatSection = () => {
     });
     setSocket(newSocket);
 
-    newSocket.on('newMessage', (message) => {
-      dispatch(addMessage(message));
+    newSocket.on('messageReceived', (message) => {
+      if (message.chatId === messageContent.chatId) { // Ensure message belongs to current chat
+        dispatch(addMessage(message));
+      }
     });
 
     return () => newSocket.close();
@@ -46,11 +51,17 @@ const ChatSection = () => {
 
   // Join the chat after socket is initialized
   useEffect(() => {
-    if (socket && chatData?._id) {
-      socket.emit("join chat", chatData._id);
-      console.log("Joined chat room:", chatData._id);
+    if (socket && messageContent.chatId) {
+      socket.emit("joinChat", messageContent.chatId);
+      console.log("User is connected and joined chat room with chatId:", messageContent.chatId);
     }
-  }, [socket, chatData?._id]);
+    // return () => {
+    //   if (socket) {
+    //     socket.emit("leaveChat", chatData._id);
+    //     console.log("User leaved the chat room with chatId:", chatData._id);
+    //   }
+    // };
+  }, [socket, messageContent.chatId]);
 
   const handleMessageInput = (e) => {
     const { name, value } = e.target;
@@ -63,7 +74,6 @@ const ChatSection = () => {
       handleSendMessage(e);
     }
   };
-
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -78,23 +88,22 @@ const ChatSection = () => {
       chatId: messageContent.chatId,
       createdAt: new Date().toISOString(),
     };
-
+    console.log("ReceiverId: " + newMessage.receiver._id, "name: " + friendData.userName)
     dispatch(addMessage(newMessage));
-    await dispatch(sendMessage(messageContent));
-
+    const res = await dispatch(sendMessage(messageContent));
     socket.emit('newMessage', newMessage);
-    setMessageContent({ ...messageContent, content: '' });
+    setMessageContent({ chatId: id, content: '' });
   };
 
   useEffect(() => {
     const fetchMessages = async () => {
-      if (chatData?._id) {
-        await dispatch(getMessagesByChatId(chatData._id));
+      if (messageContent.chatId) {
+        await dispatch(getMessagesByChatId(messageContent.chatId));
       }
     };
 
     fetchMessages();
-  }, [dispatch, chatData?._id]);
+  }, [dispatch, messageContent.chatId]);
 
   useEffect(() => {
     if (messagesEndRef.current) {

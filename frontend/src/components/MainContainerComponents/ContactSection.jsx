@@ -24,7 +24,7 @@ const ContactSection = () => {
     const res = await dispatch(createChat(friendId));
     let chatData = res?.payload?.chat
     if (res?.payload?.success) {
-      navigate(`chat/${friendId}`, { state: { friendData: friend, chatData: chatData } });
+      navigate(`chat/${chatData._id}`, { state: { friendData: friend, chatData: chatData } });
     }
   };
 
