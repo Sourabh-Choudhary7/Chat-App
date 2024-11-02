@@ -1,11 +1,12 @@
 import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { IconButton, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllRegisteredUsers } from '../../redux/Slices/AuthSlice';
 import { createChat } from '../../redux/Slices/ChatSlice';
+import { getMessagesByChatId } from '../../redux/Slices/MessageSlice';
 
 const ContactSection = () => {
   const friendsList = useSelector((state) => state?.auth?.friendsListData);
@@ -20,9 +21,13 @@ const ContactSection = () => {
     }
   };
 
-  const getOneToOneChat = async (friendId, friend) => {
+  let { id } = useParams()
+  console.log("chatId using params", id)
+  
+  const getSelectedChat = async (friendId, friend) => {
     const res = await dispatch(createChat(friendId));
     let chatData = res?.payload?.chat
+    dispatch(getMessagesByChatId(chatData?._id))
     if (res?.payload?.success) {
       navigate(`chat/${chatData._id}`, { state: { friendData: friend, chatData: chatData } });
     }
@@ -67,7 +72,7 @@ const ContactSection = () => {
               chat?.members?.some((member) => member?._id === friend?._id
               ));
             return (
-              <ul onClick={() => getOneToOneChat(friend?._id, friend)} key={friend?._id || index}>
+              <ul onClick={() => getSelectedChat(friend?._id, friend)} key={friend?._id || index}>
                 <li className="flex justify-between p-2 cursor-pointer hover:bg-gray-300 hover:rounded-[20px]">
                   <div className="flex gap-2">
                     <img src={friend?.avatar?.secure_url} alt="Contact" className="w-10 h-10 rounded-full" />

@@ -41,7 +41,7 @@ const ChatSection = () => {
     setSocket(newSocket);
 
     newSocket.on('messageReceived', (message) => {
-      if (message.chatId === messageContent.chatId) { // Ensure message belongs to current chat
+      if (message.chatId === messageContent.chatId) {
         dispatch(addMessage(message));
       }
     });
@@ -55,12 +55,6 @@ const ChatSection = () => {
       socket.emit("joinChat", messageContent.chatId);
       console.log("User is connected and joined chat room with chatId:", messageContent.chatId);
     }
-    // return () => {
-    //   if (socket) {
-    //     socket.emit("leaveChat", chatData._id);
-    //     console.log("User leaved the chat room with chatId:", chatData._id);
-    //   }
-    // };
   }, [socket, messageContent.chatId]);
 
   const handleMessageInput = (e) => {
