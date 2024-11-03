@@ -1,5 +1,5 @@
 import User from '../models/user.model.js';
-import Cloudinary from 'cloudinary';
+import cloudinary from 'cloudinary';
 import fs from 'fs/promises';
 import crypto from 'crypto';
 import AppError from '../utils/error.utils.js';
@@ -35,7 +35,7 @@ const register = async (req, res, next) => {
             phone,
             password: hashedPassword,
             avatar: {
-                public_id: null,
+                public_id: email,
                 secure_url: 'https://res.cloudinary.com/du9jzqlpt/image/upload/v1674647316/avatar_drzgxv.jpg',
             },
         })
@@ -49,7 +49,7 @@ const register = async (req, res, next) => {
         // console.log("file: ", JSON.stringify(req.file));
         if (req.file) {
             try {
-                const result = await Cloudinary.v2.uploader.upload(req.file.path, {
+                const result = await cloudinary.v2.uploader.upload(req.file.path, {
                     folder: 'profile',
                     width: 250,
                     height: 250,
