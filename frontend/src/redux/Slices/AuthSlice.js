@@ -78,6 +78,22 @@ export const getProfile = createAsyncThunk("/user/profile", async () => {
     }
 });
 
+export const updateUserProfile = createAsyncThunk("/user/update-profile", async (data) => {
+    try {
+        const res = await axiosInstance.put("users/update-profile", data, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        });
+        toast.success(res?.data?.message || "Profile updated successfully");
+        return res.data;
+    } catch (error) {
+        toast.error(error?.response?.data?.message || "Failed to update profile");
+        throw error;
+    }
+});
+
+
 export const getAllRegisteredUsers = createAsyncThunk("/user/all-people", async () => {
     try {
         let res = axiosInstance.get("users/all-users");
@@ -153,6 +169,17 @@ const authSlice = createSlice({
                     localStorage.removeItem('userData');
                     state.isLoggedIn = false;
                     state.userData = null;
+                }
+            })
+            .addCase(getProfile.fulfilled, (state, action) => {
+                if (action?.payload?.success) {
+                    const { user } = action?.payload;
+                    if (user) {
+                        localStorage.setItem('isLoggedIn', true);
+                        localStorage.setItem('userData', JSON.stringify(user));
+                        state.isLoggedIn = true;
+                        state.userData = user;
+                    }
                 }
             })
             .addCase(getFriendsList.fulfilled, (state, action) => {
