@@ -3,19 +3,19 @@ import MainContainer from './pages/MainContainer';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Welcome from './components/Welcome';
-import ChatSection from './components/MainContainerComponents/ChatSection';
+import ChatSection from './components/Layout/ChatSection';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import ErrorNotFound from './pages/ErrorNotFound';
-import Home from './components/Home';
-import AddFriend from './components/AddFriend';
-import CreateGroup from './components/CreateGroup';
+import Home from './pages/Home';
+import AddFriend from './components/User/AddFriend';
+import CreateGroup from './components/Group/CreateGroup';
 import { useSelector } from 'react-redux';
-import Profile from './components/Profile';
-import RecieverDetails from './components/RecieverDetails';
+import RecieverDetails from './components/Chat/RecieverDetails';
+import Profile from './components/User/Profile';
 
 const App = () => {
   const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn)
-  
+
   return (
     <div className="flex items-center justify-center h-screen">
       <Routes>

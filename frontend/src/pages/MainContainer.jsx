@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import Sidebar from '../components/MainContainerComponents/Sidebar';
-import ContactSection from '../components/MainContainerComponents/ContactSection';
+import Sidebar from '../components/Layout/Sidebar';
+import ContactSection from '../components/Layout/ContactSection';
 import { Outlet, useLocation } from 'react-router-dom';
 import { getAllChats } from '../redux/Slices/ChatSlice';
 import { getFriendsList } from '../redux/Slices/AuthSlice';

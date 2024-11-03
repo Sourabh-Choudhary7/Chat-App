@@ -4,7 +4,7 @@ import HowToRegOutlinedIcon from '@mui/icons-material/HowToRegOutlined';
 import PersonRemoveOutlinedIcon from '@mui/icons-material/PersonRemoveOutlined';
 import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { addFriend, getAllRegisteredUsers, getFriendsList } from '../redux/Slices/AuthSlice';
+import { addFriend, getAllRegisteredUsers, getFriendsList } from '../../redux/Slices/AuthSlice';
 
 const AddFriend = () => {
     const { state } = useLocation();
