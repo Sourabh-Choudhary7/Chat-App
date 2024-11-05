@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import welcomeImg from '../assets/loginWelcome.jpg'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
 import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
@@ -94,7 +93,7 @@ const Signup = () => {
             {/* <div className="flex h-[90vh] w-[90vw] p-5 rounded-[25px] gap-5 bg-gray-700"> */}
             <div className="flex flex-[0.6] items-center justify-center rounded-[25px] p-1 text-white max-md:hidden">
                 <img
-                    src={welcomeImg}
+                    src="https://res.cloudinary.com/ddxeed8fa/image/upload/v1730786516/loginWelcome_hkqssp.jpg"
                     alt="welcome"
                     className="bg-auto h-full w-full bg-center shadow-lg shadow-violet-700/20 rounded-[25px]"
                 />

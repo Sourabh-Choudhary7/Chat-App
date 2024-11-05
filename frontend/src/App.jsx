@@ -8,7 +8,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import ErrorNotFound from './pages/ErrorNotFound';
 import Home from './pages/Home';
 import AddFriend from './components/User/AddFriend';
-import CreateGroup from './components/Group/CreateGroup';
+import CreateGroup from './components/Chat/CreateGroup';
 import { useSelector } from 'react-redux';
 import RecieverDetails from './components/Chat/RecieverDetails';
 import Profile from './components/User/Profile';

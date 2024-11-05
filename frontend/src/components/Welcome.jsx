@@ -1,5 +1,4 @@
 import React from 'react';
-import welcomeImg from '../assets/chats.png';
 import { useSelector } from 'react-redux';
 
 const Welcome = () => {
@@ -21,7 +20,7 @@ const Welcome = () => {
       </div>
       <div className="w-1/2 px-4">
         <img
-          src={welcomeImg}
+          src="https://res.cloudinary.com/ddxeed8fa/image/upload/v1730786626/chats_uatpau.png"
           alt="welcome"
           className="h-[250px] w-[400px] rounded-lg shadow-lg shadow-violet-700/20"
         />
