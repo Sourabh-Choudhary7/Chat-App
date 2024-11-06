@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { createGroupChat, fetchGroupsForLoggedInUser } from '../../redux/Slices/ChatSlice';
 
 const CreateGroup = () => {
+    const dispatch = useDispatch();
     const friendsList = useSelector((state) => state?.auth?.friendsListData)
     const [selectedFriends, setSelectedFriends] = useState([]);
     const [groupName, setGroupName] = useState('');
@@ -17,8 +19,12 @@ const CreateGroup = () => {
             }
         });
     };
-    const handleAddGroup = () => {
-
+    const handleAddGroup = async () => {
+        const memberIds = selectedFriends?.map((friend) => friend?._id)
+        const res = await dispatch(createGroupChat({groupName, members: memberIds}))
+        if (res?.payload?.success) {
+            await dispatch(fetchGroupsForLoggedInUser());
+        }
     }
     console.log("selectedFriends:", selectedFriends)
     return (

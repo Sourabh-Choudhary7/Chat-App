@@ -14,13 +14,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addMessage, getMessagesByChatId, sendMessage } from '../../redux/Slices/MessageSlice';
 import { io } from 'socket.io-client';
 
-
 const ChatSection = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const messagesEndRef = useRef(null);
   const { state } = useLocation();
-  const friendData = state?.friendData || {};
+  const friendData = state?.data || {};
   const chatData = state?.chatData || {};
   const messageData = useSelector((state) => state?.message?.messages || []);
   const userData = useSelector((state) => state?.auth?.userData);
@@ -120,10 +119,16 @@ const ChatSection = () => {
     <div className="flex flex-col flex-[0.65] rounded-[25px] bg-white p-2">
       <div className="flex justify-between items-center p-2 flex-[0.1]">
         <div className="flex gap-2 cursor-pointer" onClick={() => navigate('reciever-details', { state: { friendData } })}>
-          <img src={friendData?.avatar?.secure_url} alt="Receiver_photo" className="w-10 h-10 rounded-full" />
+          <img src={chatData?.isGroupChat ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9dtZF4uEohaMdwIw4d8XVRIVbJAgUthdQmg&s" : friendData?.avatar?.secure_url} alt="Receiver_photo" className="w-10 h-10 rounded-full" />
           <div>
             <h3 className="font-medium">
-              {friendData?.userName?.split(' ')[0].charAt(0).toUpperCase() + friendData?.userName?.split(' ')[0].slice(1).toLowerCase()}
+              {
+                chatData?.isGroupChat
+                  ?
+                  chatData?.chatName
+                  :
+                  friendData?.userName?.split(' ')[0].charAt(0).toUpperCase() + friendData?.userName?.split(' ')[0].slice(1).toLowerCase()
+              }
             </h3>
             <span className="text-xs opacity-80">Last seen at 3:00 am</span>
           </div>

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Sidebar from '../components/Layout/Sidebar';
 import ContactSection from '../components/Layout/ContactSection';
 import { Outlet, useLocation } from 'react-router-dom';
-import { getAllChats } from '../redux/Slices/ChatSlice';
+import { fetchGroupsForLoggedInUser, getAllChats } from '../redux/Slices/ChatSlice';
 import { getFriendsList } from '../redux/Slices/AuthSlice';
 import { useDispatch } from 'react-redux';
 
@@ -12,6 +12,7 @@ const MainContainer = () => {
     useEffect(() => {
         dispatch(getFriendsList());
         dispatch(getAllChats());
+        dispatch(fetchGroupsForLoggedInUser());
     }, [dispatch])
 
 
