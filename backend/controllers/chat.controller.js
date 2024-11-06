@@ -196,7 +196,7 @@ const fetchGroupsForLoggedInUser = async (req, res, next) => {
     try {
         const { id } = req.user;
         // 1. Fetch all group chats for the logged-in user
-        const allGroupsChat = await Chat.find({ members: id, isGroupChat: true,  });
+        const allGroupsChat = await Chat.find({ members: id, isGroupChat: true,  }).populate('lastMessage');;
         if (!allGroupsChat) {
             return next(new AppError('No group chats found for this user', 404));
         }
