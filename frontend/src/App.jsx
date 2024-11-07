@@ -29,7 +29,7 @@ const App = () => {
           <Route path="welcome" element={<Welcome />} />
           <Route path="profile" element={<Profile />} />
           <Route path="chat/:id" element={<ChatSection />} />
-          <Route path="chat/:id/reciever-details" element={<RecieverDetails />} />
+          <Route path="chat/:id/chat-info" element={<RecieverDetails />} />
           <Route path="add-Friend" element={<AddFriend />} />
           <Route path="create-group" element={<CreateGroup />} />
 

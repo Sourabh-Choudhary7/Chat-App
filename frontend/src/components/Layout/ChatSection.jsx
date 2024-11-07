@@ -118,7 +118,7 @@ const ChatSection = () => {
   return (
     <div className="flex flex-col flex-[0.65] rounded-[25px] bg-white p-2">
       <div className="flex justify-between items-center p-2 flex-[0.1]">
-        <div className="flex gap-2 cursor-pointer" onClick={() => navigate('reciever-details', { state: { friendData } })}>
+        <div className="flex gap-2 cursor-pointer" onClick={() => navigate('chat-info', { state: { friendData, chatData } })}>
           <img src={chatData?.isGroupChat ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9dtZF4uEohaMdwIw4d8XVRIVbJAgUthdQmg&s" : friendData?.avatar?.secure_url} alt="Receiver_photo" className="w-10 h-10 rounded-full" />
           <div>
             <h3 className="font-medium">

@@ -8,9 +8,9 @@ const RecieverDetails = () => {
     const navigate = useNavigate();
 
     const friendData = state?.friendData || [];
+    const chatData = state?.chatData || [];
 
-    let formatedUserName = friendData?.userName
-        .split(' ')
+    let formatedUserName = friendData?.userName?.split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
         .join(' ');
 
@@ -34,7 +34,7 @@ const RecieverDetails = () => {
                 <div className="flex items-center justify-center">
                     <Tooltip title="View Profile">
                         <img
-                            src={friendData?.avatar?.secure_url}
+                            src={friendData?.isGroupChat ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9dtZF4uEohaMdwIw4d8XVRIVbJAgUthdQmg&s" : friendData?.avatar?.secure_url}
                             alt="Profile"
                             className="border-4 border-blue-400 w-24 h-24 rounded-full cursor-pointer shadow-lg"
                         />
@@ -43,11 +43,26 @@ const RecieverDetails = () => {
                 <div className="text-center">
                     <h3 className="text-xl font-bold text-blue-700 mb-2 ">
                         <span>
-                            {formatedUserName}
+                            {chatData?.isGroupChat ? chatData.chatName : formatedUserName}
                         </span>
                     </h3>
-                    <p className="text-gray-500 mb-1">Email Id: <span>{friendData?.email}</span></p>
-                    <p className="text-gray-500">Phone Number: <span>{friendData?.phone}</span></p>
+                    {chatData?.isGroupChat ?
+                        (
+                            <>
+                                <h3 className="text-l font-medium text-blue-700 mb-2 ">Group Members:</h3>
+                                {chatData?.members.map((member) => (
+                                    <p key={member.id} className="text-gray-500 mb-1"><span>{member.userName}</span></p>
+                                ))}
+
+                            </>
+                        )
+                        : (
+                            <>
+                                <p className="text-gray-500 mb-1">Email Id: <span>{friendData?.email}</span></p>
+                                <p className="text-gray-500">Phone Number: <span>{friendData?.phone}</span></p>
+                            </>
+                        )
+                    }
                 </div>
             </div>
         </div>
