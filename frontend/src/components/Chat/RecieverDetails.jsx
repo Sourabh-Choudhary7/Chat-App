@@ -1,5 +1,6 @@
 import { IconButton, Tooltip } from '@mui/material';
 import KeyboardReturnRoundedIcon from '@mui/icons-material/KeyboardReturnRounded';
+import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -40,7 +41,7 @@ const RecieverDetails = () => {
                         />
                     </Tooltip>
                 </div>
-                <div className="text-center">
+                <div className="text">
                     <h3 className="text-xl font-bold text-blue-700 mb-2 ">
                         <span>
                             {chatData?.isGroupChat ? chatData.chatName : formatedUserName}
@@ -49,11 +50,17 @@ const RecieverDetails = () => {
                     {chatData?.isGroupChat ?
                         (
                             <>
-                                <h3 className="text-l font-medium text-blue-700 mb-2 ">Group Members:</h3>
-                                {chatData?.members.map((member) => (
-                                    <p key={member.id} className="text-gray-500 mb-1"><span>{member.userName}</span></p>
-                                ))}
-
+                                <div>
+                                    <div className='flex items-center justify-center gap-4'>
+                                    <h3 className="text-l font-medium text-blue-700 mb-2 ">Group Members:</h3>
+                                    <IconButton title='Add new member'>
+                                        <PersonAddOutlinedIcon className='text-black' />
+                                    </IconButton>
+                                    </div>
+                                    {chatData?.members.map((member) => (
+                                        <p key={member.id} className="text-gray-500 mb-1"><span>{member.userName}</span></p>
+                                    ))}
+                                </div>
                             </>
                         )
                         : (
