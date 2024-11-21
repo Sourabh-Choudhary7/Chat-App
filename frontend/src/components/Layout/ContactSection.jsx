@@ -12,7 +12,8 @@ const ContactSection = () => {
   const friendsList = useSelector((state) => state?.auth?.friendsListData);
   const groups = useSelector((state) => state?.chat?.groups);
   const chatList = useSelector((state) => state?.chat?.allChatsData);
-
+  console.log("length of groups: " + groups.length)
+  console.log("length of freinds: " + friendsList.length)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -77,7 +78,11 @@ const ContactSection = () => {
         </IconButton>
       </div>
       <div className="flex-auto overflow-y-auto rounded-[25px] bg-white text-black">
-        <h2 className="m-2 font-medium text-xl">Groups</h2>
+        {
+          groups.length > 0 ? (
+            <h2 className="m-2 font-medium text-xl">Groups</h2>
+          ) : ""
+        }
         {
           groups?.map((group, index) => (
             <ul onClick={() => getSelectedChat(group?._id, group, true)} key={group?._id || index}>
@@ -98,7 +103,18 @@ const ContactSection = () => {
             </ul>
           ))
         }
-        <h2 className="m-2 font-medium text-xl">Friends</h2>
+        {
+          friendsList.length > 0 ? (
+            <h2 className="m-2 font-medium text-xl">Friends</h2>
+          ) :
+            (
+              <div>
+                <button className='m-4 bg-gray-200 rounded-md p-2 hover:bg-gray-300 text-gray-700' onClick={getAllUsers}>
+                  <PersonAddOutlinedIcon /> <span> Add Friend to your contact </span>
+                </button>
+              </div>
+            )
+        }
         {
           friendsList?.map((friend, index) => {
             const chat = chatList?.find((chat) =>
