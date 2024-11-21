@@ -12,8 +12,6 @@ const ContactSection = () => {
   const friendsList = useSelector((state) => state?.auth?.friendsListData);
   const groups = useSelector((state) => state?.chat?.groups);
   const chatList = useSelector((state) => state?.chat?.allChatsData);
-  console.log("length of groups: " + groups.length)
-  console.log("length of freinds: " + friendsList.length)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
