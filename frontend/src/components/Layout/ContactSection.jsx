@@ -110,12 +110,12 @@ const ContactSection = () => {
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9dtZF4uEohaMdwIw4d8XVRIVbJAgUthdQmg&s" alt="Group icon" className="w-10 h-10 rounded-full bg-blue-950" />
                     <div>
                       <h3>{group?.chatName}</h3>
-                      <span className="text-sm opacity-80">{group?.lastMessage?.content}</span>
+                      <span className="text-sm opacity-80">{group?.lastMessage?.content || "No message yet"}</span>
                     </div>
                   </div>
                   <div className="flex flex-col items-end">
-                    <p className="text-sm opacity-80">{formatTimestamp(group?.lastMessage?.createdAt)}</p>
-                    <p className="text-sm opacity-80">✓✓</p>
+                    <p className="text-sm opacity-80">{!group?.lastMessage ? "" : formatTimestamp(group?.lastMessage?.createdAt)}</p>
+                    <p className="text-sm opacity-80">{!group?.lastMessage ? "" : "✓✓"}</p>
                   </div>
                 </li>
                 <hr className="mx-auto w-[90%] border-gray-300" />
@@ -147,8 +147,8 @@ const ContactSection = () => {
                       </div>
                     </div>
                     <div className="flex flex-col items-end">
-                      <p className="text-sm opacity-80">{formatTimestamp(chat?.lastMessage?.createdAt)}</p>
-                      <p className="text-sm opacity-80">✓✓</p>
+                      <p className="text-sm opacity-80">{!chat?.lastMessage ? "" : formatTimestamp(chat?.lastMessage?.createdAt)}</p>
+                      <p className="text-sm opacity-80">{!chat?.lastMessage ? "" : "✓✓"}</p>
                     </div>
                   </li>
                   <hr className="mx-auto w-[90%] border-gray-300" />
