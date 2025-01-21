@@ -93,7 +93,7 @@ const RecieverDetails = () => {
                             {chatData?.members.map((member) => {
                                 const isAdmin = chatData?.groupAdmin.some((admin) => admin._id === member._id);
                                 return (
-                                    <p key={member._id} className="mb-2 flex items-center justify-between w-full">
+                                    <div key={member._id} className="mb-2 flex items-center justify-between w-full">
                                         <div className="flex gap-4">
                                             <Tooltip title="View Profile">
                                                 <img
@@ -116,7 +116,7 @@ const RecieverDetails = () => {
                                             <MoreVertIcon className="text-[#9747FF] h-10 w-10" />
                                         </IconButton>
                                         {/* )} */}
-                                    </p>
+                                    </div>
                                 );
                             })}
 
