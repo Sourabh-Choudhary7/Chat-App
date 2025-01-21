@@ -100,7 +100,7 @@ const ContactSection = () => {
         </IconButton>
       </div>
       <div className="flex-auto overflow-y-auto rounded-[25px] bg-white text-black">
-        {filteredContacts.groups.length > 0 && (
+        {filteredContacts?.groups?.length > 0 && (
           <>
             <h2 className="m-2 font-medium text-xl">Groups</h2>
             {filteredContacts.groups.map((group, index) => (
@@ -124,7 +124,7 @@ const ContactSection = () => {
           </>
         )}
 
-        {filteredContacts.friendsList.length > 0 && (
+        {filteredContacts?.friendsList?.length > 0 && (
           <>
             <h2 className="m-2 font-medium text-xl">Friends</h2>
             {filteredContacts.friendsList.map((friend, index) => {
@@ -158,13 +158,13 @@ const ContactSection = () => {
           </>
         )}
 
-        {filteredContacts.friendsList.length === 0 && filteredContacts.groups.length === 0 && (
+        {filteredContacts?.friendsList?.length === 0 && filteredContacts?.groups?.length === 0 && (
           <div className="text-center text-gray-500 mt-4">
             <p>No friends and groups found</p>
           </div>
         )}
 
-        {friendsList.length === 0 && (
+        {friendsList?.length === 0 && (
           <div className="text-center mt-4">
             <button
               className="m-4 bg-gray-200 rounded-md p-2 hover:bg-gray-300 text-gray-700"
