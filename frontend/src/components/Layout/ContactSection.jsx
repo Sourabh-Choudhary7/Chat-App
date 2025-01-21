@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import { useNavigate, useParams } from 'react-router-dom';

@@ -2,7 +2,7 @@ import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 import KeyboardReturnRoundedIcon from '@mui/icons-material/KeyboardReturnRounded';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -24,9 +24,12 @@ const RecieverDetails = () => {
     // handle menu items of individual member
     const open = Boolean(anchorEl);
 
-    const handleMenuOpen = (event, member) => {
+    const handleMenuOpen = (event, member, isAdmin) => {
         setAnchorEl(event.currentTarget);
-        setSelectedMember(member);
+        setSelectedMember({
+            member: member,
+            isAdmin: isAdmin
+        });
     };
 
     const handleMenuClose = () => {
@@ -103,32 +106,50 @@ const RecieverDetails = () => {
                                                 {member?.userName?.split(' ')
                                                     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
                                                     .join(' ')}
-                                                {/* showing who is admin in the group */}
                                                 {isAdmin && (
                                                     <span className="ml-2 border-2 border-green-600 border-solid px-1 rounded-md text-green-500 text-sm">Group Admin</span>
                                                 )}
                                             </span>
                                         </div>
-                                        {LoggedInUserData._id !== member._id ? (
-                                            <IconButton onClick={(event) => handleMenuOpen(event, member)}>
-                                                <MoreVertIcon className="text-[#9747FF] h-10 w-10" />
-                                            </IconButton>
-                                        ) : ""
-                                        }
+                                        {/* {LoggedInUserData._id !== member._id && ( */}
+                                        <IconButton onClick={(event) => handleMenuOpen(event, member, isAdmin)}>
+                                            <MoreVertIcon className="text-[#9747FF] h-10 w-10" />
+                                        </IconButton>
+                                        {/* )} */}
                                     </p>
-                                )
+                                );
                             })}
+
+                            {/* Options Menu */}
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleMenuClose}
+                            >
+                                {selectedMember?.member?._id === LoggedInUserData?._id ? (
+                                    // Logged-in user's menu
+                                    <div>
+
+                                        {!selectedMember?.isAdmin && (
+                                            <MenuItem>Make Group Admin</MenuItem>
+                                        )}
+                                        <MenuItem>Leave this Group</MenuItem>
+                                    </div>
+                                ) : (
+                                    // Other members' menu
+                                    <div>
+                                        <MenuItem>View Profile</MenuItem>
+                                        <MenuItem>Message</MenuItem>
+                                        {!selectedMember?.isAdmin && (
+                                            <MenuItem>Make Group Admin</MenuItem>
+                                        )}
+                                        <MenuItem>Leave this Group</MenuItem>
+                                    </div>
+                                )}
+                            </Menu>
+
                         </div>
-                        {/* Options Menu */}
-                        <Menu
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleMenuClose}
-                        >
-                            <MenuItem>View Profile</MenuItem>
-                            <MenuItem >Message</MenuItem>
-                            <MenuItem >Make Group Admin</MenuItem>
-                        </Menu>
+
 
                         {/* Add Friends Section */}
                         {showFriendList && (
