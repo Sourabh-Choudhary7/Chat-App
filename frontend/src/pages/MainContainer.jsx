@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import Sidebar from '../components/Layout/Sidebar';
 import ContactSection from '../components/Layout/ContactSection';
 import { Outlet, useLocation } from 'react-router-dom';

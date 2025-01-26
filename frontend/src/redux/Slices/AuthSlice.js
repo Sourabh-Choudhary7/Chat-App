@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../helpers/axiosInstance';
 import toast from 'react-hot-toast';
