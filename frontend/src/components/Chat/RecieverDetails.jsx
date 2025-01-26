@@ -2,13 +2,14 @@ import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 import KeyboardReturnRoundedIcon from '@mui/icons-material/KeyboardReturnRounded';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchGroupsForLoggedInUser, getGroupChat, makeGroupAdmin } from '../../redux/Slices/ChatSlice';
 
 const RecieverDetails = () => {
     const { state } = useLocation();
+    const { groupId } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [showFriendList, setShowFriendList] = useState(false);
@@ -24,8 +25,18 @@ const RecieverDetails = () => {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
         .join(' ');
 
+
+    useEffect(() => {
+        if (!chatData && (state?.friendData?._id || groupId)) {
+            dispatch(getGroupChat(state?.friendData?._id || groupId));
+        }
+    }, [chatData, state, groupId, dispatch]);
+
+    
+
     // handle menu items of individual member
     const open = Boolean(anchorEl);
+
 
     const handleMenuOpen = (event, member, isAdmin) => {
         setAnchorEl(event.currentTarget);
@@ -86,7 +97,9 @@ const RecieverDetails = () => {
             <hr className="w-11/12 border-t border-gray-300 opacity-50 mb-4" />
 
             {/* Main Content Container */}
-            <div className="flex flex-col justify-center border border-blue-200 p-6 rounded-[25px] w-full gap-4 shadow-md max-w-md overflow">
+            {!chatData ? ( <div>Loading chat details...</div>) :
+            (
+                 <div className="flex flex-col justify-center border border-blue-200 p-6 rounded-[25px] w-full gap-4 shadow-md max-w-md overflow">
                 {/* Avatar and Profile */}
                 <div className="flex items-center justify-center">
                     <Tooltip title="View Profile">
@@ -106,9 +119,6 @@ const RecieverDetails = () => {
                         </span>
                     </h3>
                 </div>
-                {
-                    console.log("This group Chat Data :", chatData)
-                }
                 {chatData?.isGroupChat ? (
                     <>
                         <div>
@@ -226,6 +236,9 @@ const RecieverDetails = () => {
                 )}
 
             </div>
+            )
+         
+            }
         </div>
     );
 };
