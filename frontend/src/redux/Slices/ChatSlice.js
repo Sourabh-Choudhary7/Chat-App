@@ -79,6 +79,26 @@ export const fetchGroupsForLoggedInUser = createAsyncThunk("user/chat/get-groups
     }
 });
 
+// Async thunk to make as admin by admin of the group
+export const makeGroupAdmin = createAsyncThunk("user/chat/make-admin", async (data, { rejectWithValue }) => {
+    try {
+        const res = axiosInstance.post("chats/make-group-admin", data);
+        toast.promise(res, {
+            loading: "Making group admin...",
+            success: (data) => {
+                return data?.data?.message;
+            },
+            error: "Failed to make new admin",
+        });
+        const response = await res;
+        return response.data;
+    } catch (error) {
+        toast.error(error?.response?.data?.message || "An error occurred");
+        return rejectWithValue(error.response?.data?.message);
+    }
+});
+
+
 const chatSlice = createSlice({
     name: 'chat',
     initialState,
@@ -130,7 +150,24 @@ const chatSlice = createSlice({
             .addCase(getGroupChat.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+
+            .addCase(makeGroupAdmin.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(makeGroupAdmin.fulfilled, (state, action) => {
+                state.loading = false;
+                if (state.selectedGroupChat?._id === action.payload.groupId) {
+                    state.selectedGroupChat = { ...state.selectedGroupChat, ...action.payload };
+                }
+            })
+
+            .addCase(makeGroupAdmin.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
+
     },
 });
 

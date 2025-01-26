@@ -4,11 +4,13 @@ import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchGroupsForLoggedInUser, getGroupChat, makeGroupAdmin } from '../../redux/Slices/ChatSlice';
 
 const RecieverDetails = () => {
     const { state } = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [showFriendList, setShowFriendList] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedMember, setSelectedMember] = useState(null);
@@ -16,7 +18,8 @@ const RecieverDetails = () => {
     const LoggedInUserData = useSelector((state) => state?.auth?.userData)
     const friendData = state?.friendData || [];
     const friendsListData = useSelector((state) => state?.auth?.friendsListData);
-    const chatData = state?.chatData || [];
+    // const chatData = state?.chatData || [];
+    const chatData = useSelector((state) => state?.chat?.selectedGroupChat?.groupChat);
     let formattedUserName = friendData?.userName?.split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
         .join(' ');
@@ -41,6 +44,29 @@ const RecieverDetails = () => {
     const nonGroupFriends = friendsListData.filter(friend =>
         !chatData?.members.some(member => member._id === friend._id)
     );
+
+    // make as admin functionality
+    const handleMakeGroupAdmin = async (newAdminId) => {
+        console.log("newAdminId: ", newAdminId);
+        if (newAdminId === LoggedInUserData._id) {
+            alert("You can't make yourself an admin");
+            return;
+        }
+        if (chatData?.members.some(member => member._id === newAdminId && member.isAdmin)) {
+            alert("This member is already an admin");
+            return;
+        }
+
+        const data = {
+            groupId: chatData?._id,
+            newAdminId,
+        };
+
+        const res = await dispatch(makeGroupAdmin(data));
+        if (res?.payload?.success)
+            dispatch(fetchGroupsForLoggedInUser());
+        dispatch(getGroupChat(data.groupId));
+    };
 
     return (
         <div className='flex flex-col items-center flex-[0.65] rounded-[25px] bg-white p-2 overflow-auto max-h-screen'>
@@ -80,6 +106,9 @@ const RecieverDetails = () => {
                         </span>
                     </h3>
                 </div>
+                {
+                    console.log("This group Chat Data :", chatData)
+                }
                 {chatData?.isGroupChat ? (
                     <>
                         <div>
@@ -102,37 +131,32 @@ const RecieverDetails = () => {
                                                     className="border-4 border-blue-400 w-8 h-8 rounded-full cursor-pointer shadow-lg"
                                                 />
                                             </Tooltip>
-                                            <span className='text-gray-500'>
-                                                {member?.userName?.split(' ')
-                                                    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                                            <span className="text-gray-500">
+                                                {member?.userName
+                                                    ?.split(' ')
+                                                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
                                                     .join(' ')}
                                                 {isAdmin && (
-                                                    <span className="ml-2 border-2 border-green-600 border-solid px-1 rounded-md text-green-500 text-sm">Group Admin</span>
+                                                    <span className="ml-2 border-2 border-green-600 border-solid px-1 rounded-md text-green-500 text-sm">
+                                                        Group Admin
+                                                    </span>
                                                 )}
                                             </span>
                                         </div>
-                                        {/* {LoggedInUserData._id !== member._id && ( */}
+
+                                        {/* Options button should always be visible */}
                                         <IconButton onClick={(event) => handleMenuOpen(event, member, isAdmin)}>
                                             <MoreVertIcon className="text-[#9747FF] h-10 w-10" />
                                         </IconButton>
-                                        {/* )} */}
                                     </div>
                                 );
                             })}
 
                             {/* Options Menu */}
-                            <Menu
-                                anchorEl={anchorEl}
-                                open={open}
-                                onClose={handleMenuClose}
-                            >
+                            <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
                                 {selectedMember?.member?._id === LoggedInUserData?._id ? (
                                     // Logged-in user's menu
                                     <div>
-
-                                        {!selectedMember?.isAdmin && (
-                                            <MenuItem>Make Group Admin</MenuItem>
-                                        )}
                                         <MenuItem>Leave this Group</MenuItem>
                                     </div>
                                 ) : (
@@ -140,10 +164,19 @@ const RecieverDetails = () => {
                                     <div>
                                         <MenuItem>View Profile</MenuItem>
                                         <MenuItem>Message</MenuItem>
-                                        {!selectedMember?.isAdmin && (
-                                            <MenuItem>Make Group Admin</MenuItem>
+                                        {/* Only show admin options if logged-in user is an admin */}
+                                        {chatData?.groupAdmin.some((admin) => admin._id === LoggedInUserData?._id) && (
+                                            <>
+                                                {!selectedMember?.isAdmin ? (
+                                                    <MenuItem onClick={() => handleMakeGroupAdmin(selectedMember?.member?._id)}>
+                                                        Make as Admin
+                                                    </MenuItem>
+                                                ) : (
+                                                    <MenuItem>Dismiss as Admin</MenuItem>
+                                                )}
+                                                <MenuItem>Remove Member</MenuItem>
+                                            </>
                                         )}
-                                        <MenuItem>Leave this Group</MenuItem>
                                     </div>
                                 )}
                             </Menu>
