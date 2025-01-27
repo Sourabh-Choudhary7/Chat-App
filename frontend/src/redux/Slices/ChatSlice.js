@@ -98,6 +98,25 @@ export const makeGroupAdmin = createAsyncThunk("user/chat/make-admin", async (da
     }
 });
 
+// Async thunk to make as admin by admin of the group
+export const dismissAsGroupAdmin = createAsyncThunk("user/chat/dismiss-as-admin", async (data, { rejectWithValue }) => {
+    try {
+        const res = axiosInstance.post("chats/dismiss-as-admin", data);
+        toast.promise(res, {
+            loading: "Removing as admin...",
+            success: (data) => {
+                return data?.data?.message;
+            },
+            error: "Failed to dismiss as admin",
+        });
+        const response = await res;
+        return response.data;
+    } catch (error) {
+        toast.error(error?.response?.data?.message || "An error occurred");
+        return rejectWithValue(error.response?.data?.message);
+    }
+});
+
 
 const chatSlice = createSlice({
     name: 'chat',
@@ -162,8 +181,22 @@ const chatSlice = createSlice({
                     state.selectedGroupChat = { ...state.selectedGroupChat, ...action.payload };
                 }
             })
-
             .addCase(makeGroupAdmin.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+
+            .addCase(dismissAsGroupAdmin.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(dismissAsGroupAdmin.fulfilled, (state, action) => {
+                state.loading = false;
+                if (state.selectedGroupChat?._id === action.payload.groupId) {
+                    state.selectedGroupChat = { ...state.selectedGroupChat, ...action.payload };
+                }
+            })
+            .addCase(dismissAsGroupAdmin.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             });
