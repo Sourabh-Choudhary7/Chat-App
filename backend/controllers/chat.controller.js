@@ -196,7 +196,7 @@ const fetchGroupsForLoggedInUser = async (req, res, next) => {
     try {
         const { id } = req.user;
         // 1. Fetch all group chats for the logged-in user
-        const allGroupsChat = await Chat.find({ members: id, isGroupChat: true,  }).populate('lastMessage');;
+        const allGroupsChat = await Chat.find({ members: id, isGroupChat: true, }).populate('lastMessage');;
         if (!allGroupsChat) {
             return next(new AppError('No group chats found for this user', 404));
         }
@@ -256,6 +256,59 @@ const makeGroupAdmin = async (req, res, next) => {
     }
 }
 
+const dismmissAsGroupAdmin = async (req, res, next) => {
+    try {
+        const { groupId, adminId } = req.body;
+        const { id } = req.user; // ID of the requesting user (logged-in user)
+
+        // 1. Find the group by ID
+        const groupChat = await Chat.findById(groupId);
+        if (!groupChat) {
+            return next(new AppError('Group chat not found', 404));
+        }
+
+        // 2. Check if the requesting user is an admin
+        if (!groupChat.groupAdmin.includes(id)) {
+            return next(new AppError('Only group admins can dismiss a member', 403));
+        }
+
+        // 3. Ensure the admin to be dismissed is in the groupAdmin list
+        const isAdminToDismiss = groupChat.groupAdmin.some(admin => admin.equals(adminId));
+        console.log('groupAdmin:', groupChat.groupAdmin);
+        console.log('adminId:', adminId);
+
+        if (!isAdminToDismiss) {
+            return next(new AppError('The specified user is not an admin of this group', 400));
+        }
+
+        // 4. Check if the admin to be dismissed is the requesting user
+        if (id === adminId) {
+            return next(new AppError('You cannot dismiss yourself as an admin', 400));
+        }
+
+        // 5. Remove the admin from the groupAdmin array
+        groupChat.groupAdmin = groupChat.groupAdmin.filter(
+            admin => admin.toString() !== adminId
+        );
+        await groupChat.save();
+
+        // 6. Fetch the updated group chat with populated members and admin info
+        const updatedGroupChat = await Chat.findById(groupId)
+            .populate('members', 'userName avatar phone email')
+            .populate('groupAdmin', 'userName avatar phone email');
+
+        // 7. Return the updated group chat
+        return res.status(200).json({
+            success: true,
+            message: 'Admin dismissed successfully',
+            groupChat: updatedGroupChat
+        });
+    } catch (error) {
+        return next(new AppError(error.message, 500));
+    }
+};
+
+
 const exitGroup = async (req, res, next) => {
     try {
 
@@ -272,5 +325,6 @@ export {
     getGroupChat,
     fetchGroupsForLoggedInUser,
     makeGroupAdmin,
+    dismmissAsGroupAdmin,
     exitGroup,
 }
