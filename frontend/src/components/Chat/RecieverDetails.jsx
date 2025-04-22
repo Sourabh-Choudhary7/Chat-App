@@ -141,9 +141,11 @@ const RecieverDetails = () => {
                                 <div>
                                     <div className='flex items-center justify-between'>
                                         <h3 className="text-l font-medium text-blue-700 mb-2">Group Members:</h3>
-                                        <IconButton title='Add new member' onClick={() => setShowFriendList(!showFriendList)}>
-                                            <PersonAddOutlinedIcon className='text-black' />
-                                        </IconButton>
+                                        {chatData?.groupAdmin?.some(admin => admin._id === LoggedInUserData?._id) && (
+                                            <IconButton title='Add new member' onClick={() => setShowFriendList(!showFriendList)}>
+                                                <PersonAddOutlinedIcon className='text-black' />
+                                            </IconButton>
+                                        )}
                                     </div>
 
                                     {chatData?.members.map((member) => {
