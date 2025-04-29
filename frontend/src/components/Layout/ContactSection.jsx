@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { IconButton, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllRegisteredUsers } from '../../redux/Slices/AuthSlice';
-import { createChat, getGroupChat } from '../../redux/Slices/ChatSlice';
+import { clearSelectedChats, createChat, getGroupChat } from '../../redux/Slices/ChatSlice';
 import { getMessagesByChatId } from '../../redux/Slices/MessageSlice';
 
 const ContactSection = () => {
@@ -50,6 +50,7 @@ const ContactSection = () => {
   console.log("chatId using params", id);
 
   const getSelectedChat = async (id, data, isGroup = false) => {
+    dispatch(clearSelectedChats());
     console.log("getSelectedChat: ", data)
     let res;
     let chatData;

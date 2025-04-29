@@ -5,7 +5,9 @@ import toast from 'react-hot-toast';
 const initialState = {
     allChatsData: [],
     groups: [],
+    selectedFriendChat: null,
     selectedGroupChat: null,
+    activeChatId: null,
     loading: false,
     error: null,
 };
@@ -121,7 +123,22 @@ export const dismissAsGroupAdmin = createAsyncThunk("user/chat/dismiss-as-admin"
 const chatSlice = createSlice({
     name: 'chat',
     initialState,
-    reducers: {},
+    reducers: {
+        // ✅ Reducer to manually set selected friend chat
+        setSelectedFriendChat: (state, action) => {
+            state.selectedFriendChat = action.payload;
+        },
+        clearSelectedChats: (state) => {
+            state.selectedGroupChat = null;
+            state.selectedFriendChat = null;
+        },
+        setActiveChatId: (state, action) => {
+            state.activeChatId = action.payload;
+        },
+        clearActiveChatId: (state) => {
+            state.activeChatId = null;
+        },
+    },
     extraReducers: (builder) => {
         builder
             // Handle getAllChats
@@ -137,12 +154,12 @@ const chatSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
-            
+
             // Handle createGroupChat
             .addCase(createGroupChat.fulfilled, (state, action) => {
                 state.groups.push(action.payload);
             })
-            
+
             // Handle fetchGroupsForLoggedInUser
             .addCase(fetchGroupsForLoggedInUser.pending, (state) => {
                 state.loading = true;
@@ -156,7 +173,7 @@ const chatSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
-            
+
             // Handle getGroupChat
             .addCase(getGroupChat.pending, (state) => {
                 state.loading = true;
@@ -203,5 +220,7 @@ const chatSlice = createSlice({
 
     },
 });
+
+export const { setSelectedFriendChat, clearSelectedChats, setActiveChatId, clearActiveChatId } = chatSlice.actions;
 
 export default chatSlice.reducer;
