@@ -120,6 +120,11 @@ const ChatSection = () => {
     }
   }, [messageData]);
 
+
+  let formattedUserName = friendData?.userName?.split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+        
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
@@ -133,7 +138,7 @@ const ChatSection = () => {
           <img src={chatData?.isGroupChat ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9dtZF4uEohaMdwIw4d8XVRIVbJAgUthdQmg&s" : friendData?.avatar?.secure_url} alt="Receiver_photo" className="w-10 h-10 rounded-full" />
           <div>
             <h3 className="font-medium">
-              {chatData?.isGroupChat ? chatData?.chatName : friendData?.userName}
+              {chatData?.isGroupChat ? chatData?.chatName : formattedUserName}
             </h3>
             <span className="text-xs opacity-80">Last seen at 3:00 am</span>
           </div>
