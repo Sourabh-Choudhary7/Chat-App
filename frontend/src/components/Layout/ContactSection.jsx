@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { IconButton, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllRegisteredUsers } from '../../redux/Slices/AuthSlice';
-import { clearSelectedChats, createChat, getGroupChat } from '../../redux/Slices/ChatSlice';
+import { clearSelectedChats, clearSelectedGroupChats, createChat, getGroupChat, setSelectedFriendChat } from '../../redux/Slices/ChatSlice';
 import { getMessagesByChatId } from '../../redux/Slices/MessageSlice';
 
 const ContactSection = () => {
@@ -50,27 +50,31 @@ const ContactSection = () => {
   console.log("chatId using params", id);
 
   const getSelectedChat = async (id, data, isGroup = false) => {
-    dispatch(clearSelectedChats());
     let res;
     let chatData;
 
     if (isGroup) {
-      // Fetch the group chat details
+      dispatch(clearSelectedChats());
       res = await dispatch(getGroupChat(id));
       chatData = res?.payload?.groupChat;
     } else {
-      // Create or get individual chat with a friend
       res = await dispatch(createChat(id));
       chatData = res?.payload?.chat;
+      await dispatch(clearSelectedGroupChats());
+      await dispatch(setSelectedFriendChat(chatData));
     }
 
-    // Fetch messages for the selected chat
-    dispatch(getMessagesByChatId(chatData?._id));
-
-    if (res?.payload?.success) {
-      navigate(`chat/${chatData._id}`, { state: { chatData: chatData, data: data } });
+    if (chatData?._id) {
+      dispatch(getMessagesByChatId(chatData._id));
+      if (res?.payload?.success) {
+        navigate(`/app/chat/${chatData._id}`, {
+          state: { chatData, data },
+        });
+      }
     }
   };
+
+
 
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);

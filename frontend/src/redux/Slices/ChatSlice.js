@@ -129,8 +129,13 @@ const chatSlice = createSlice({
             state.selectedFriendChat = action.payload;
         },
         clearSelectedChats: (state) => {
-            state.selectedGroupChat = null;
             state.selectedFriendChat = null;
+        },
+        setSelectedGroupChat: (state, action) => {
+            state.selectedGroupChat = action.payload;
+        },
+        clearSelectedGroupChats: (state) => {
+            state.selectedGroupChat = null;
         },
         setActiveChatId: (state, action) => {
             state.activeChatId = action.payload;
@@ -221,6 +226,6 @@ const chatSlice = createSlice({
     },
 });
 
-export const { setSelectedFriendChat, clearSelectedChats, setActiveChatId, clearActiveChatId } = chatSlice.actions;
+export const { setSelectedFriendChat, clearSelectedChats, setSelectedGroupChat, clearSelectedGroupChats, setActiveChatId, clearActiveChatId } = chatSlice.actions;
 
 export default chatSlice.reducer;
