@@ -51,7 +51,6 @@ const ContactSection = () => {
 
   const getSelectedChat = async (id, data, isGroup = false) => {
     dispatch(clearSelectedChats());
-    console.log("getSelectedChat: ", data)
     let res;
     let chatData;
 

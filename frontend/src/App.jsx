@@ -1,4 +1,3 @@
-import React from 'react';
 import MainContainer from './pages/MainContainer';
 import Login from './pages/Login';
 import Signup from './pages/Signup';

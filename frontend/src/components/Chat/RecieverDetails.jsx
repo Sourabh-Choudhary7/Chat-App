@@ -10,7 +10,8 @@ import toast from 'react-hot-toast';
 
 const RecieverDetails = () => {
     const { state } = useLocation();
-    const { groupId } = useParams();
+    const { id } = useParams();
+    let groupId = id;
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [showFriendList, setShowFriendList] = useState(false);
@@ -72,15 +73,29 @@ const RecieverDetails = () => {
             return;
         }
 
+        // Optimistic UI update
+        setSelectedMember(prev => ({
+            ...prev,
+            isAdmin: true
+        }));
+
         const data = {
             groupId: chatData?._id,
             newAdminId,
         };
 
         const res = await dispatch(makeGroupAdmin(data));
-        if (res?.payload?.success)
+        if (res?.payload?.success) {
             // dispatch(fetchGroupsForLoggedInUser());
             dispatch(getGroupChat(data.groupId));
+        }
+        else {
+            // Revert if failed
+            setSelectedMember(prev => ({
+                ...prev,
+                isAdmin: false
+            }));
+        }
     };
 
     const handleDismisssAsAdmin = async (adminId) => {
@@ -89,14 +104,29 @@ const RecieverDetails = () => {
             return;
         }
 
+         // Revert if failed
+         setSelectedMember(prev => ({
+            ...prev,
+            isAdmin: false
+        }));
+
         const data = {
             groupId: chatData?._id,
             adminId,
         };
         const res = await dispatch(dismissAsGroupAdmin(data));
         if (res?.payload?.success)
+        {
             // dispatch(fetchGroupsForLoggedInUser());
             dispatch(getGroupChat(data.groupId));
+        }
+        else {
+             // Revert if failed
+        setSelectedMember(prev => ({
+            ...prev,
+            isAdmin: true
+        }));
+        }
 
     }
 
